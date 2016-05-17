@@ -132,7 +132,7 @@
 %define SWIG_CUSTOM_EXCEPTION(name)
     catch (const name &e) {
         SWIG_exception_fail(
-            SWIG_UnknownError,
+            SWIG_RuntimeError,
             e.what()
         );
     }
@@ -142,7 +142,7 @@
         SWIG_CATCH_STDEXCEPT
         catch (...) {
             SWIG_exception_fail(
-                SWIG_RuntimeError,
+                SWIG_UnknownError,
                 "Unknown error"
             );
         }
