@@ -59,25 +59,25 @@ SET(PYTHON_INSTALL_DIR ${PYTHON_INSTALL_DIR} CACHE FILEPATH "Python install dire
 MACRO(SWIG_BUILD_PYTHON_MODULE module_name install_dir cplusplus)
     INCLUDE(${SWIG_USE_FILE})
 
-    SET(SWIG_PYTHON_INCLUDE_DIRS
+    SET(SWIG_INCLUDE_DIRS
         ${CMAKE_CURRENT_SOURCE_DIR}
         ${CMAKE_CURRENT_BINARY_DIR}
         ${SWIG_MODULE_DIR}
         ${SWIG_PYTHON_INCLUDE_DIRS}
         ${PYTHON_INCLUDE_DIRS}
     )
-    INCLUDE_DIRECTORIES(${SWIG_PYTHON_INCLUDE_DIRS})
+    INCLUDE_DIRECTORIES(${SWIG_INCLUDE_DIRS})
 
-    SET(SWIG_PYTHON_LIBRARIES
+    SET(SWIG_LIBRARIES
         ${SWIG_PYTHON_LIBRARIES}
         ${PYTHON_LIBRARIES}
     )
 
     # Set flags to pass into SWIG call
     SET(CMAKE_SWIG_FLAGS -module ${module_name})
-    FOREACH(dir ${SWIG_PYTHON_INCLUDE_DIRS})
+    FOREACH(dir ${SWIG_INCLUDE_DIRS})
         LIST(APPEND CMAKE_SWIG_FLAGS "-I${dir}")
-    ENDFOREACH(dir ${SWIG_PYTHON_INCLUDE_DIRS})
+    ENDFOREACH(dir ${SWIG_INCLUDE_DIRS})
 
     # Allows CMake variables to be placed in SWIG .i files
     CONFIGURE_FILE(
@@ -92,7 +92,7 @@ MACRO(SWIG_BUILD_PYTHON_MODULE module_name install_dir cplusplus)
 
     # The actual CMake call for SWIG
     SWIG_ADD_MODULE(${module_name} python ${CMAKE_CURRENT_BINARY_DIR}/${module_name}.i)
-    SWIG_LINK_LIBRARIES(${module_name} ${SWIG_PYTHON_LIBRARIES})
+    SWIG_LINK_LIBRARIES(${module_name} ${SWIG_LIBRARIES})
 
     # Make sure SWIG artifacts are placed in same location on each platform
     # Makes Python unit testing easier
