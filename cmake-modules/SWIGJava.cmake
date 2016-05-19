@@ -6,10 +6,12 @@
 #
 
 ########################################################################
-# This file creates the macro SWIG_BUILD_JAVA_MODULE. It builds a
-# Java SWIG module and installs it in the desired location without the
+# This file creates the following macros (example usage at end):
 #
-# Macro parameters:
+# SWIG_BUILD_JAVA_MODULE: Build a Java SWIG module and install it in
+#                         the desired location.
+#
+# Parameters:
 #  * module_name:  The module filename, minus the .i extension.
 #  * package_name: The name of this module's Java package.
 #  * cplusplus:    TRUE or FALSE, whether or not this is a C++ module.
@@ -25,12 +27,23 @@
 #  * SWIG_JAVA_LIBRARIES:    C/C++ libraries the Java module should
 #                            link against.
 #
-# Example (mymodule.i):
-#  * SWIG_BUILD_JAVA_MODULE(mymodule nc.MyModule TRUE)
+# JAVA_BUILD_JAR: Build a Java JAR file. Meant to be used after the
+#                 previous macro.
+#
+# Parameters:
+#  * jar_name: the name of the JAR to be produced
+#  * swig_modules: SWIG modules made with SWIG_BUILD_JAVA_MODULE
+#  * package_name: same name passed into SWIG_BUILD_JAVA_MODULE
+#  * manifest_txt (optional): path to Manifest.txt
+#
+# Example (mymodule1.i, mymodule2.i):
+#  * In CMake:
+#        SWIG_BUILD_JAVA_MODULE(mymodule1 nc.MyModule TRUE)
+#        SWIG_BUILD_JAVA_MODULE(mymodule2 nc.MyModule TRUE)
+#        JAVA_BUILD_JAR(MyModule.jar "mymodule1;mymodule2" nc.MyModule TRUE)
 #
 #  * From Java:
 #        import nc.MyModule.*;
-#
 ########################################################################
 
 MACRO(SWIG_BUILD_JAVA_MODULE module_name package_name cplusplus)
@@ -89,3 +102,36 @@ MACRO(SWIG_BUILD_JAVA_MODULE module_name package_name cplusplus)
     ENDIF(WIN32)
 
 ENDMACRO(SWIG_BUILD_JAVA_MODULE)
+
+MACRO(JAVA_BUILD_JAR jar_name swig_modules package_name manifest_txt)
+    # Derive depending files from SWIG module names
+    FOREACH(module ${swig_modules})
+        LIST(APPEND java_depends "${module}JNI.java")
+        LIST(APPEND swig_depends "${SWIG_MODULE_${module}_REAL_NAME}")
+    ENDFOREACH(module ${swig_modules})
+
+    # Get info from variables
+    GET_FILENAME_COMPONENT(package_dir ${package_name} NAME_WE) # Not a filename, but it works
+    STRING(REPLACE "." "_" jar_target ${jar_name})
+
+    # Build JAR
+    ADD_CUSTOM_COMMAND(
+        OUTPUT ${CMAKE_CURRENT_BINARY_JAR}/${jar_name}
+        COMMENT "Creating ${jar_name}"
+        COMMAND ${Java_JAVAC_EXECUTABLE} -Xlint:unchecked -d ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_BINARY_DIR}/*.java
+        COMMAND ${Java_JAR_EXECUTABLE} cfm ${CMAKE_CURRENT_BINARY_DIR}/${jar_name} ${manifest_txt} -C ${CMAKE_CURRENT_BINARY_DIR} ${package_dir}
+        DEPENDS ${java_depends}
+        DEPENDS ${swig_depends}
+    )
+    ADD_CUSTOM_TARGET(
+        ${jar_target} ALL
+        DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${jar_name}
+    )
+
+    # Install file
+    INSTALL(
+        FILES ${CMAKE_CURRENT_BINARY_DIR}/${jar_name}
+        DESTINATION share/java
+        COMPONENT Java
+    )
+ENDMACRO(JAVA_BUILD_JAR)
