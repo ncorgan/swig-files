@@ -90,13 +90,13 @@ MACRO(SWIG_BUILD_JAVA_MODULE module_name package_name cplusplus)
     IF(WIN32)
         INSTALL(
             TARGETS ${SWIG_MODULE_${swig_source}_REAL_NAME}
-            DESTINATION ${RUNTIME_DIR}
+            DESTINATION bin
             COMPONENT Java
         )
     ELSE()
         INSTALL(
             TARGETS ${SWIG_MODULE_${swig_source}_REAL_NAME}
-            DESTINATION ${LIBRARY_DIR}
+            DESTINATION lib
             COMPONENT Java
         )
     ENDIF(WIN32)
