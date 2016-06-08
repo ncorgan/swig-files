@@ -58,6 +58,7 @@
 
 %define SWIG_CUSTOM_EXCEPTION(name)
     _SWIG_CSHARP_EXCEPTION(name, SWIG_CSharpApplicationException)
+%enddef
 
 %define SWIG_CATCH
         _SWIG_CSHARP_EXCEPTION(std::bad_exception, SWIG_CSharpApplicationException)
@@ -79,7 +80,6 @@
             return $null;
         }
     }
-%enddef
 %enddef
 
 #elif SWIGJAVA
