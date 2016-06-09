@@ -16,6 +16,10 @@
  * CEnv.setEnv("MYPKG_ASSETS_DIR", "/data/assets/dir")
  */
 
+#ifndef SWIGJAVA
+#error java_env.i is only meant to be used with Java modules.
+#endif
+
 %module CEnv
 %include <java_init.i>
 JAVA_INIT("CEnv")

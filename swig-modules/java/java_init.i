@@ -5,10 +5,6 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-#ifndef SWIGJAVA
-#error java_init.i is only meant to be used with Java modules.
-#endif
-
 /*
  * This file supplies the macro JAVA_INIT, which takes in a SWIG module name
  * and tells the Java JAR to load the module's native library when it is
@@ -16,6 +12,10 @@
  *
  * Example: JAVA_INIT("module_name")
  */
+
+#ifndef SWIGJAVA
+#error java_init.i is only meant to be used with Java modules.
+#endif
 
 %define JAVA_INIT(libname)
     %pragma(java) jniclasscode=%{
