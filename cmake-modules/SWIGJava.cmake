@@ -89,13 +89,13 @@ MACRO(SWIG_BUILD_JAVA_MODULE module_name package_name cplusplus)
     # Install files
     IF(WIN32)
         INSTALL(
-            TARGETS ${SWIG_MODULE_${swig_source}_REAL_NAME}
+            TARGETS ${SWIG_MODULE_${module_name}_REAL_NAME}
             DESTINATION bin
             COMPONENT Java
         )
     ELSE()
         INSTALL(
-            TARGETS ${SWIG_MODULE_${swig_source}_REAL_NAME}
+            TARGETS ${SWIG_MODULE_${module_name}_REAL_NAME}
             DESTINATION lib
             COMPONENT Java
         )
