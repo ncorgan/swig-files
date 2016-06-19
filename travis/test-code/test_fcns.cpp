@@ -7,9 +7,6 @@
 
 #include "test_fcns.hpp"
 
-#ifndef INCLUDED_TEST_FCNS_HPP
-#define INCLUDED_TEST_FCNS_HPP
-
 /*
  * Exceptions
  */
@@ -43,12 +40,10 @@ static void _throw_bad_exception() throw (int, std::exception) {
 }
 
 void throw_bad_exception() {
-    std::set_unexpected(_unexpected)i;
+    std::set_unexpected(_unexpected);
     _throw_bad_exception();
 }
 
 void throw_std_exception() {
     throw test_exception("std::exception");
 }
-
-#endif

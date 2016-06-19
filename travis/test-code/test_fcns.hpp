@@ -8,6 +8,8 @@
 #ifndef INCLUDED_TEST_FCNS_HPP
 #define INCLUDED_TEST_FCNS_HPP
 
+#include <boost/exception/all.hpp>
+
 #include <stdexcept>
 
 /*
@@ -53,6 +55,10 @@ inline void throw_runtime_error() {
 }
 
 void throw_std_exception();
+
+inline void throw_boost_exception() {
+    BOOST_THROW_EXCEPTION(std::runtime_error("boost::exception"));
+}
 
 inline void throw_unknown() {
     throw 5;
