@@ -28,18 +28,25 @@
  * SWIG_CUSTOM_EXCEPTION(my_first_exception)
  * SWIG_CUSTOM_EXCEPTION(my_other_exception)
  * SWIG_CATCH
+ *
+ * Executing SWIG with the compile flag -DSWIG_WRAP_BOOST_EXCEPTIONS will allow
+ * boost::exception and any subclasses to be wrapped in a special case.
  */
-
-#if SWIGCSHARP
 
 %include <std_string.i>
 
 %{
+#ifdef SWIG_WRAP_BOOST_EXCEPTIONS
+    #include <boost/exception.hpp>
+#endif
+
     #include <stdexcept>
 %}
 
+#if SWIGCSHARP
+
 %define _SWIG_CSHARP_EXCEPTION(cpp, csharp)
-    catch(const cpp &e) {
+    catch (const cpp &e) {
         SWIG_CSharpSetPendingException(
             csharp, e.what()
         );
@@ -48,7 +55,7 @@
 %enddef
 
 %define _SWIG_CSHARP_ARGS_EXCEPTION(cpp, csharp)
-    catch(const cpp &e) {
+    catch (const cpp &e) {
         SWIG_CSharpSetPendingExceptionArgument(
             csharp, e.what(), ""
         );
@@ -56,11 +63,26 @@
     }
 %enddef
 
+#ifdef SWIG_WRAP_BOOST_EXCEPTIONS
+%define _SWIG_CSHARP_BOOST_EXCEPTION
+    catch (const boost::exception &e) {
+        SWIG_CSharpSetPendingExceptionArgument(
+            SWIG_CSharpApplicationException,
+            boost::diagnostic_information(e).c_str()
+        );
+        return $null;
+    }
+%enddef
+#else
+#define _SWIG_CSHARP_BOOST_EXCEPTION
+#endif
+
 %define SWIG_CUSTOM_EXCEPTION(name)
     _SWIG_CSHARP_EXCEPTION(name, SWIG_CSharpApplicationException)
 %enddef
 
 %define SWIG_CATCH
+        _SWIG_CSHARP_BOOST_EXCEPTION
         _SWIG_CSHARP_EXCEPTION(std::bad_exception, SWIG_CSharpApplicationException)
         _SWIG_CSHARP_ARGS_EXCEPTION(std::invalid_argument, SWIG_CSharpArgumentException)
         _SWIG_CSHARP_EXCEPTION(std::domain_error, SWIG_CSharpApplicationException)
@@ -84,14 +106,8 @@
 
 #elif SWIGJAVA
 
-%include <std_string.i>
-
-%{
-    #include <stdexcept>
-%}
-
 %define _SWIG_JAVA_EXCEPTION(cpp, java)
-    catch(const cpp &e) {
+    catch (const cpp &e) {
         SWIG_JavaThrowException(
             jenv, java, e.what()
         );
@@ -99,11 +115,26 @@
     }
 %enddef
 
+#ifdef SWIG_WRAP_BOOST_EXCEPTIONS
+%define _SWIG_JAVA_BOOST_EXCEPTION
+    catch (const boost::exception &e) {
+        SWIG_JavaThrowException(
+            jenv, SWIG_JavaRuntimeException,
+            boost::diagnostic_information(e).c_str()
+        );
+        return $null;
+    }
+%enddef
+#else
+#define _SWIG_JAVA_BOOST_EXCEPTION
+#endif
+
 %define SWIG_CUSTOM_EXCEPTION(name)
     _SWIG_JAVA_EXCEPTION(name, SWIG_JavaRuntimeException)
 %enddef
 
 %define SWIG_CATCH
+        _SWIG_JAVA_BOOST_EXCEPTION
         _SWIG_JAVA_EXCEPTION(std::bad_exception, SWIG_JavaRuntimeException)
         _SWIG_JAVA_EXCEPTION(std::invalid_argument, SWIG_JavaIllegalArgumentException)
         _SWIG_JAVA_EXCEPTION(std::domain_error, SWIG_JavaRuntimeException)
@@ -129,6 +160,19 @@
 
 %include <typemaps/exception.swg>
 
+#ifdef SWIG_WRAP_BOOST_EXCEPTIONS
+%define _SWIG_BOOST_EXCEPTION
+    catch (const boost::exception &e) {
+        SWIG_exception_fail(
+            SWIG_RuntimeError,
+            boost::diagnostic_information(e).c_str()
+        );
+    }
+%enddef
+#else
+#define _SWIG_BOOST_EXCEPTION
+#endif
+
 %define SWIG_CUSTOM_EXCEPTION(name)
     catch (const name &e) {
         SWIG_exception_fail(
@@ -139,6 +183,7 @@
 %enddef
 
 %define SWIG_CATCH
+        _SWIG_BOOST_EXCEPTION
         SWIG_CATCH_STDEXCEPT
         catch (...) {
             SWIG_exception_fail(
