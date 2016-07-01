@@ -8,7 +8,9 @@
 #ifndef INCLUDED_TEST_FCNS_HPP
 #define INCLUDED_TEST_FCNS_HPP
 
+#ifdef SWIG_WRAP_BOOST_EXCEPTIONS
 #include <boost/exception/all.hpp>
+#endif
 
 #include <stdexcept>
 
@@ -57,7 +59,9 @@ inline void throw_runtime_error() {
 void throw_std_exception();
 
 inline void throw_boost_exception() {
+#ifdef SWIG_WRAP_BOOST_EXCEPTIONS
     BOOST_THROW_EXCEPTION(std::runtime_error("boost::exception"));
+#endif
 }
 
 inline void throw_unknown() {

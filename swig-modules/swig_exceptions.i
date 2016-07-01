@@ -37,7 +37,7 @@
 
 %{
 #ifdef SWIG_WRAP_BOOST_EXCEPTIONS
-    #include <boost/exception.hpp>
+    #include <boost/exception/all.hpp>
 #endif
 
     #include <stdexcept>
@@ -66,7 +66,7 @@
 #ifdef SWIG_WRAP_BOOST_EXCEPTIONS
 %define _SWIG_CSHARP_BOOST_EXCEPTION
     catch (const boost::exception &e) {
-        SWIG_CSharpSetPendingExceptionArgument(
+        SWIG_CSharpSetPendingException(
             SWIG_CSharpApplicationException,
             boost::diagnostic_information(e).c_str()
         );

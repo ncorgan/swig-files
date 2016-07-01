@@ -29,6 +29,8 @@
 #  * SWIG_CSHARP_LIBRARIES:    C/C++ libraries the C# module should
 #                              link against.
 #
+#  * SWIG_CSHARP_FLAGS:        Flags to pass into the SWIG command (optional).
+#
 # CSHARP_BUILD_DLL: Build a C# DLL. Meant to be used after the
 #                   previous macro.
 #
@@ -55,8 +57,9 @@ MACRO(SWIG_CSHARP_INIT)
 ENDMACRO(SWIG_CSHARP_INIT)
 
 MACRO(SWIG_BUILD_CSHARP_MODULE swig_module_name csharp_module_name cplusplus)
-    INCLUDE(${SWIG_USE_FILE})
+    INCLUDE(UseSWIG)
 
+    MESSAGE(STATUS "${SWIG_CSHARP_INCLUDE_DIRS}")
     SET(SWIG_INCLUDE_DIRS
         ${CMAKE_CURRENT_SOURCE_DIR}
         ${SWIG_MODULE_DIR}
@@ -77,21 +80,21 @@ MACRO(SWIG_BUILD_CSHARP_MODULE swig_module_name csharp_module_name cplusplus)
     ENDFOREACH()
 
     # Set flags to pass into SWIG call
-    SET(CMAKE_SWIG_FLAGS -module ${csharp_module_name} -package ${package_name})
+    SET(CMAKE_SWIG_FLAGS -module ${csharp_module_name} ${SWIG_CSHARP_FLAGS})
     FOREACH(dir ${SWIG_INCLUDE_DIRS})
         LIST(APPEND CMAKE_SWIG_FLAGS "-I${dir}")
     ENDFOREACH(dir ${SWIG_INCLUDE_DIRS})
 
     # Allows CMake variables to be placed in SWIG .i files
     CONFIGURE_FILE(
-        ${CMAKE_CURRENT_SOURCE_DIR}/${swig_module_name}.i
+        ${SWIG_MODULE_DIR}/${swig_module_name}.i
         ${CMAKE_CURRENT_BINARY_DIR}/${swig_module_name}.i
     @ONLY)
 
     # Set SWIG's C++ flag if specified by the user
-    IF(cplusplus)
+    IF(${cplusplus})
         SET_SOURCE_FILES_PROPERTIES(${CMAKE_CURRENT_BINARY_DIR}/${swig_module_name}.i PROPERTIES CPLUSPLUS ON)
-    ENDIF(cplusplus)
+    ENDIF(${cplusplus})
 
     # The actual CMake call for SWIG
     SWIG_ADD_MODULE(${swig_module_name} csharp ${CMAKE_CURRENT_BINARY_DIR}/${swig_module_name}.i)
@@ -114,7 +117,7 @@ MACRO(SWIG_BUILD_CSHARP_MODULE swig_module_name csharp_module_name cplusplus)
             COMPONENT CSharp
         )
     ENDIF(WIN32)
-ENDMACRO(SWIG_BUILD_CSHARP_MACRO)
+ENDMACRO(SWIG_BUILD_CSHARP_MODULE)
 
 MACRO(CSHARP_BUILD_DLL dll_name swig_modules)
     # Derive dependencies
@@ -128,7 +131,7 @@ MACRO(CSHARP_BUILD_DLL dll_name swig_modules)
     ADD_DEPENDENCIES(${dll_name} ${swig_depends})
 
     INSTALL(
-        TARGETS ${dll_name}
+        FILES ${CSHARP_BINARY_DIRECTORY}/${dll_name}.dll
         DESTINATION bin
         COMPONENT CSharp
     )

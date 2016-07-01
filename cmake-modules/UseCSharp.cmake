@@ -83,13 +83,6 @@ macro( CSHARP_ADD_PROJECT type name )
     endif ( )
   endforeach( )
 
-  # Check we have at least one source
-  list( LENGTH sources_dep sources_length )
-  if ( ${sources_length} LESS 1 )
-    MESSAGE( SEND_ERROR "No C# sources were specified for ${type} ${name}" )
-  endif ()
-  list( SORT sources_dep )
-
   # Perform platform specific actions
   if (WIN32)
     string( REPLACE "/" "\\" sources ${sources} )
