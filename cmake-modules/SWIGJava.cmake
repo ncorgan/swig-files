@@ -114,7 +114,6 @@ MACRO(JAVA_BUILD_JAR jar_name swig_modules package_name manifest_txt)
 
     # Get info from variables
     GET_FILENAME_COMPONENT(package_dir ${package_name} NAME_WE) # Not a filename, but it works
-    MESSAGE(STATUS "${package_dir}")
     STRING(REPLACE "." "_" jar_target ${jar_name})
 
     # Check for manifest file, determines a flag
