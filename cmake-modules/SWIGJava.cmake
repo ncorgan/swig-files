@@ -27,6 +27,8 @@
 #  * SWIG_JAVA_LIBRARIES:    C/C++ libraries the Java module should
 #                            link against.
 #
+#  * SWIG_JAVA_FLAGS:        Flags to pass into the SWIG command (optional).
+#
 # JAVA_BUILD_JAR: Build a Java JAR file. Meant to be used after the
 #                 previous macro.
 #
@@ -40,14 +42,14 @@
 #  * In CMake:
 #        SWIG_BUILD_JAVA_MODULE(mymodule1 nc.MyModule TRUE)
 #        SWIG_BUILD_JAVA_MODULE(mymodule2 nc.MyModule TRUE)
-#        JAVA_BUILD_JAR(MyModule.jar "mymodule1;mymodule2" nc.MyModule TRUE)
+#        JAVA_BUILD_JAR(MyModule.jar "mymodule1;mymodule2" nc.MyModule "Manifest.txt")
 #
 #  * From Java:
 #        import nc.MyModule.*;
 ########################################################################
 
 MACRO(SWIG_BUILD_JAVA_MODULE module_name package_name cplusplus)
-    INCLUDE(${SWIG_USE_FILE})
+    INCLUDE(UseSWIG)
 
     SET(SWIG_INCLUDE_DIRS
         ${CMAKE_CURRENT_SOURCE_DIR}
@@ -66,21 +68,21 @@ MACRO(SWIG_BUILD_JAVA_MODULE module_name package_name cplusplus)
     )
 
     # Set flags to pass into SWIG call
-    SET(CMAKE_SWIG_FLAGS -module ${module_name} -package ${package_name})
+    SET(CMAKE_SWIG_FLAGS -module ${module_name} -package ${package_name} ${SWIG_JAVA_FLAGS})
     FOREACH(dir ${SWIG_INCLUDE_DIRS})
         LIST(APPEND CMAKE_SWIG_FLAGS "-I${dir}")
     ENDFOREACH(dir ${SWIG_INCLUDE_DIRS})
 
     # Allows CMake variables to be placed in SWIG .i files
     CONFIGURE_FILE(
-        ${CMAKE_CURRENT_SOURCE_DIR}/${module_name}.i
+        ${SWIG_MODULE_DIR}/${module_name}.i
         ${CMAKE_CURRENT_BINARY_DIR}/${module_name}.i
     @ONLY)
 
     # Set SWIG's C++ flag if specified by the user
-    IF(cplusplus)
+    IF(${cplusplus})
         SET_SOURCE_FILES_PROPERTIES(${CMAKE_CURRENT_BINARY_DIR}/${module_name}.i PROPERTIES CPLUSPLUS ON)
-    ENDIF(cplusplus)
+    ENDIF(${cplusplus})
 
     # The actual CMake call for SWIG
     SWIG_ADD_MODULE(${module_name} java ${CMAKE_CURRENT_BINARY_DIR}/${module_name}.i)
@@ -112,14 +114,22 @@ MACRO(JAVA_BUILD_JAR jar_name swig_modules package_name manifest_txt)
 
     # Get info from variables
     GET_FILENAME_COMPONENT(package_dir ${package_name} NAME_WE) # Not a filename, but it works
+    MESSAGE(STATUS "${package_dir}")
     STRING(REPLACE "." "_" jar_target ${jar_name})
+
+    # Check for manifest file, determines a flag
+    IF("${manifest_txt}" STREQUAL "")
+        SET(CF_FLAG "cf")
+    ELSE()
+        SET(CF_FLAG "cfm")
+    ENDIF("${manifest_txt}" STREQUAL "")
 
     # Build JAR
     ADD_CUSTOM_COMMAND(
-        OUTPUT ${CMAKE_CURRENT_BINARY_JAR}/${jar_name}
+        OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${jar_name}
         COMMENT "Creating ${jar_name}"
         COMMAND ${Java_JAVAC_EXECUTABLE} -Xlint:unchecked -d ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_BINARY_DIR}/*.java
-        COMMAND ${Java_JAR_EXECUTABLE} cfm ${CMAKE_CURRENT_BINARY_DIR}/${jar_name} ${manifest_txt} -C ${CMAKE_CURRENT_BINARY_DIR} ${package_dir}
+        COMMAND ${Java_JAR_EXECUTABLE} ${CF_FLAG} ${CMAKE_CURRENT_BINARY_DIR}/${jar_name} ${manifest_txt} -C ${CMAKE_CURRENT_BINARY_DIR} ${package_dir}
         DEPENDS ${java_depends}
         DEPENDS ${swig_depends}
     )
