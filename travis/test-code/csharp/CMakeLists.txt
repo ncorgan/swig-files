@@ -1,0 +1,48 @@
+#
+# Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+#
+# Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
+# or copy at http://opensource.org/licenses/MIT)
+#
+
+INCLUDE(UseCSharp)
+INCLUDE(SWIGCSharp)
+
+IF(SWIG_WRAP_BOOST_EXCEPTIONS)
+    SET(SWIG_CSHARP_FLAGS "-DSWIG_WRAP_BOOST_EXCEPTIONS")
+ENDIF(SWIG_WRAP_BOOST_EXCEPTIONS)
+
+SET(SWIG_MODULE_DIR
+    ${CMAKE_CURRENT_SOURCE_DIR}
+)
+SET(SWIG_CSHARP_INCLUDE_DIRS
+    ${CMAKE_SOURCE_DIR}
+    ${CMAKE_SOURCE_DIR}/../../swig-modules
+)
+SET(SWIG_CSHARP_LIBRARIES
+    swigtest
+)
+
+# Build SWIG module and C# DLL
+SWIG_CSHARP_INIT()
+SWIG_BUILD_CSHARP_MODULE(swigtest_csharp SWIGTestCSharp TRUE)
+CSHARP_BUILD_DLL(swigtest-csharp "swigtest_csharp")
+
+# Build test
+SET(CSHARP_SOURCE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+CSHARP_BUILD_EXE(CSharpSWIGTest swigtest-csharp)
+
+# Add unit test
+IF(SWIG_WRAP_BOOST_EXCEPTIONS)
+    SET(SWIGWRAP 1)
+ENDIF(SWIG_WRAP_BOOST_EXCEPTIONS)
+IF(WIN32)
+    SET(TEST_CMD "${CMAKE_CURRENT_BINARY_DIR}/CSharpSWIGTest.exe")
+ELSE()
+    SET(TEST_CMD "${CSHARP_INTERPRETER} ${CMAKE_CURRENT_BINARY_DIR}/CSharpSWIGTest.exe")
+ENDIF(WIN32)
+CONFIGURE_FILE(
+    ${CMAKE_SOURCE_DIR}/test.sh.in
+    ${CMAKE_CURRENT_BINARY_DIR}/csharp-test.sh
+)
+ADD_TEST(csharp_test ${CMAKE_CURRENT_BINARY_DIR}/csharp-test.sh)

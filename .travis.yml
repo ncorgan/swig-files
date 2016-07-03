@@ -1,0 +1,11 @@
+os:
+ - linux
+
+sudo: required
+dist: trusty
+
+before_install:
+  - bash travis/install-deps.sh
+
+script:
+  - bash travis/build-test.sh

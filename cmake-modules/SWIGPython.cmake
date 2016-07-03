@@ -26,6 +26,8 @@
 #  * SWIG_PYTHON_LIBRARIES:    C/C++ libraries the Python module should
 #                              link against.
 #
+#  * SWIG_PYTHON_FLAGS:        Flags to pass into the SWIG command (optional).
+#
 # Example (mymodule.i, mysubmodule.i):
 #  * SWIG_BUILD_PYTHON_MODULE(mymodule mymodule TRUE)
 #  * SWIG_BUILD_PYTHON_MODULE(mysubmodule mymodule/mysubmodule TRUE)
@@ -74,21 +76,21 @@ MACRO(SWIG_BUILD_PYTHON_MODULE module_name install_dir cplusplus)
     )
 
     # Set flags to pass into SWIG call
-    SET(CMAKE_SWIG_FLAGS -module ${module_name})
+    SET(CMAKE_SWIG_FLAGS -module ${module_name} ${SWIG_PYTHON_FLAGS})
     FOREACH(dir ${SWIG_INCLUDE_DIRS})
         LIST(APPEND CMAKE_SWIG_FLAGS "-I${dir}")
     ENDFOREACH(dir ${SWIG_INCLUDE_DIRS})
 
     # Allows CMake variables to be placed in SWIG .i files
     CONFIGURE_FILE(
-        ${CMAKE_CURRENT_SOURCE_DIR}/${module_name}.i
+        ${SWIG_MODULE_DIR}/${module_name}.i
         ${CMAKE_CURRENT_BINARY_DIR}/${module_name}.i
     @ONLY)
 
     # Set SWIG's C++ flag if specified by the user
-    IF(cplusplus)
+    IF(${cplusplus})
         SET_SOURCE_FILES_PROPERTIES(${CMAKE_CURRENT_BINARY_DIR}/${module_name}.i PROPERTIES CPLUSPLUS ON)
-    ENDIF(cplusplus)
+    ENDIF(${cplusplus})
 
     # The actual CMake call for SWIG
     SWIG_ADD_MODULE(${module_name} python ${CMAKE_CURRENT_BINARY_DIR}/${module_name}.i)
