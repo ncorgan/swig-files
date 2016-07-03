@@ -23,6 +23,11 @@ SET(SWIG_CSHARP_LIBRARIES
     swigtest
 )
 
+# Build SWIG module and C# DLL
 SWIG_CSHARP_INIT()
 SWIG_BUILD_CSHARP_MODULE(swigtest_csharp SWIGTestCSharp TRUE)
 CSHARP_BUILD_DLL(swigtest-csharp "swigtest_csharp")
+
+# Build test
+SET(CSHARP_SOURCE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+CSHARP_BUILD_EXE(CSharpSWIGTest swigtest-csharp)

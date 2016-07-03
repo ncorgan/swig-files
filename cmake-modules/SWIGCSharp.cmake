@@ -79,7 +79,8 @@ MACRO(SWIG_BUILD_CSHARP_MODULE swig_module_name csharp_module_name cplusplus)
     ENDFOREACH()
 
     # Set flags to pass into SWIG call
-    SET(CMAKE_SWIG_FLAGS -module ${csharp_module_name} ${SWIG_CSHARP_FLAGS})
+    # TODO: workaround for recent CMake dllimport assumptions
+    SET(CMAKE_SWIG_FLAGS -module ${csharp_module_name} -dllimport ${swig_module_name} ${SWIG_CSHARP_FLAGS})
     FOREACH(dir ${SWIG_INCLUDE_DIRS})
         LIST(APPEND CMAKE_SWIG_FLAGS "-I${dir}")
     ENDFOREACH(dir ${SWIG_INCLUDE_DIRS})
@@ -97,7 +98,7 @@ MACRO(SWIG_BUILD_CSHARP_MODULE swig_module_name csharp_module_name cplusplus)
 
     # The actual CMake call for SWIG
     SWIG_ADD_MODULE(${swig_module_name} csharp ${CMAKE_CURRENT_BINARY_DIR}/${swig_module_name}.i)
-    LIST(LENGTH ${SWIG_LIBRARIES} num_swig_libs)
+    LIST(LENGTH SWIG_LIBRARIES num_swig_libs)
     IF(${num_swig_libs} GREATER 0)
         SWIG_LINK_LIBRARIES(${swig_module_name} ${SWIG_LIBRARIES})
     ENDIF(${num_swig_libs} GREATER 0)
@@ -135,3 +136,14 @@ MACRO(CSHARP_BUILD_DLL dll_name swig_modules)
         COMPONENT CSharp
     )
 ENDMACRO(CSHARP_BUILD_DLL)
+
+MACRO(CSHARP_BUILD_EXE exe_name swig_dll)
+    CSHARP_ADD_EXECUTABLE(${exe_name} ${CSHARP_SOURCE_DIRECTORY}/${exe_name}.cs ${CMAKE_CURRENT_BINARY_DIR}/${swig_dll}.dll)
+    ADD_DEPENDENCIES(${exe_name} ${swig_dll})
+
+    INSTALL(
+        FILES ${CMAKE_CURRENT_BINARY_DIR}/${exe_name}
+        DESTINATION bin
+        COMPONENT CSharp
+    )
+ENDMACRO(CSHARP_BUILD_EXE)
