@@ -248,6 +248,48 @@ public class CSharpSWIGTest {
         return true;
     }
 
+    public static bool IOErrorTest() {
+        System.Console.Write("Starting IOErrorTest...");
+        try {
+            SWIGTestCSharp.throw_io_error();
+            System.Console.WriteLine("failed (no exception thrown).\n");
+            return false;
+        } catch(System.IO.IOException e) {
+            if(!e.Message.Equals("io_error")) {
+                System.Console.WriteLine("failed (e.Message = \"" + e.Message +"\" instead of \"io_error\"\n");
+                return false;
+            }
+        } catch(System.Exception e) {
+            System.Console.WriteLine("failed (" + e.GetType() + " thrown instead of System.IO.IOException).");
+            System.Console.WriteLine("Message: " + e.Message + "\n");
+            return false;
+        }
+
+        System.Console.WriteLine("success.\n");
+        return true;
+    }
+
+    public static bool ValueErrorTest() {
+        System.Console.Write("Starting ValueErrorTest...");
+        try {
+            SWIGTestCSharp.throw_value_error();
+            System.Console.WriteLine("failed (no exception thrown).\n");
+            return false;
+        } catch(System.ArgumentOutOfRangeException e) {
+            if(!e.Message.Equals("value_error")) {
+                System.Console.WriteLine("failed (e.Message = \"" + e.Message +"\" instead of \"value_error\"\n");
+                return false;
+            }
+        } catch(System.Exception e) {
+            System.Console.WriteLine("failed (" + e.GetType() + " thrown instead of System.ArgumentOutOfRangeException).");
+            System.Console.WriteLine("Message: " + e.Message + "\n");
+            return false;
+        }
+
+        System.Console.WriteLine("success.\n");
+        return true;
+    }
+
     public static bool StdExceptionTest() {
         System.Console.Write("Starting StdExceptionTest...");
         try {
@@ -302,6 +344,8 @@ public class CSharpSWIGTest {
         successful      &= OverflowErrorTest();
         successful      &= UnderflowErrorTest();
         successful      &= RuntimeErrorTest();
+        successful      &= IOErrorTest();
+        successful      &= ValueErrorTest();
         successful      &= StdExceptionTest();
         successful      &= UnknownErrorTest();
 

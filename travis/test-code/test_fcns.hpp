@@ -26,8 +26,52 @@
 #include <stdexcept>
 
 /*
- * Exceptions
+ * These two exceptions will be specifically caught.
  */
+
+#ifndef SWIG
+
+class io_error: public std::exception {
+    public:
+        explicit io_error(
+            const char* msg
+        ): _msg(msg) {}
+
+        explicit io_error(
+            const std::string &msg
+        ): _msg(msg) {}
+
+        virtual ~io_error() throw() {}
+
+        virtual const char* what() const throw() {
+            return _msg.c_str();
+        }
+
+    private:
+        std::string _msg;
+};
+
+class value_error: public std::exception {
+    public:
+        explicit value_error(
+            const char* msg
+        ): _msg(msg) {}
+
+        explicit value_error(
+            const std::string &msg
+        ): _msg(msg) {}
+
+        virtual ~value_error() throw() {}
+
+        virtual const char* what() const throw() {
+            return _msg.c_str();
+        }
+
+    private:
+        std::string _msg;
+};
+
+#endif
 
 SWIGTEST_EXPORT void throw_bad_exception();
 
@@ -65,6 +109,14 @@ SWIGTEST_INLINE void throw_underflow_error() {
 
 SWIGTEST_INLINE void throw_runtime_error() {
     throw std::runtime_error("std::runtime_error");
+}
+
+SWIGTEST_INLINE void throw_io_error() {
+    throw io_error("io_error");
+}
+
+SWIGTEST_INLINE void throw_value_error() {
+    throw value_error("value_error");
 }
 
 SWIGTEST_EXPORT void throw_std_exception();

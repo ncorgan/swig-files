@@ -8,20 +8,21 @@
 #include "test_fcns.hpp"
 
 /*
- * Exceptions
+ * This exception will not be exposed, and it will be caught as a
+ * std::exception.
  */
 
-class test_exception: public std::exception {
+class memory_exception: public std::exception {
     public:
-        explicit test_exception(
+        explicit memory_exception(
             const char* msg
         ): _msg(msg) {}
 
-        explicit test_exception(
+        explicit memory_exception(
             const std::string &msg
         ): _msg(msg) {}
 
-        virtual ~test_exception() throw() {}
+        virtual ~memory_exception() throw() {}
 
         virtual const char* what() const throw() {
             return _msg.c_str();
@@ -45,5 +46,5 @@ void throw_bad_exception() {
 }
 
 void throw_std_exception() {
-    throw test_exception("std::exception");
+    throw memory_exception("std::exception");
 }

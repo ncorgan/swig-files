@@ -5,11 +5,15 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-%include <swig_exceptions.i>
-SWIG_CATCH_DEFAULT
-
 %{
     #include "test_fcns.hpp"
 %}
+
+// Exceptions
+%include <swig_exceptions.i>
+SWIG_TRY
+SWIG_CUSTOM_EXCEPTION(io_error,    SWIG_IOError)
+SWIG_CUSTOM_EXCEPTION(value_error, SWIG_ValueError)
+SWIG_CATCH
 
 %include "test_fcns.hpp"
