@@ -257,6 +257,51 @@ public class JavaSWIGTest {
         return true;
     }
 
+    /*
+     * java.io.IOException is a checked exception, so we have to catch it as an Exception
+     * and check it there.
+     */
+    public static boolean IOErrorTest() {
+        System.out.print("Starting IOErrorTest...");
+
+        try {
+            swigtest_java.throw_io_error();
+        } catch(Exception e) {
+            if(!e.getMessage().equals("io_error")) {
+                System.out.println("failed (e.getMessage() = \"" + e.getMessage() + "\" instead of \"io_error\").\n");
+                return false;
+            }
+            if(!e.getClass().toString().equals("class java.io.IOException")) {
+                System.out.println("failed (" + e.getClass() + " thrown instead of \"class java.io.IOException\").");
+                System.out.println("Message: " + e.getMessage() + "\n");
+                return false;
+            }
+        }
+
+        System.out.println("success.\n");
+        return true;
+    }
+
+    public static boolean ValueErrorTest() {
+        System.out.print("Starting ValueErrorTest...");
+
+        try {
+            swigtest_java.throw_value_error();
+        } catch(RuntimeException e) {
+            if(!e.getMessage().equals("value_error")) {
+                System.out.println("failed (e.getMessage() = \"" + e.getMessage() + "\" instead of \"value_error\").\n");
+                return false;
+            }
+        } catch(Exception e) {
+            System.out.println("failed (" + e.getClass() + " thrown instead of RuntimeException).");
+            System.out.println("Message: " + e.getMessage() + "\n");
+            return false;
+        }
+
+        System.out.println("success.\n");
+        return true;
+    }
+
     public static boolean StdExceptionTest() {
         System.out.print("Starting StdExceptionTest...");
 
@@ -282,13 +327,13 @@ public class JavaSWIGTest {
 
         try {
             swigtest_java.throw_unknown();
-        } catch(RuntimeException e) {
-            if(!e.getMessage().equals("Unknown error.")) {
-                System.out.println("failed (e.getMessage() = \"" + e.getMessage() + "\" instead of \"Unknown error.\").\n");
+        } catch(java.lang.UnknownError e) {
+            if(!e.getMessage().equals("Unknown error")) {
+                System.out.println("failed (e.getMessage() = \"" + e.getMessage() + "\" instead of \"Unknown error\").\n");
                 return false;
             }
-        } catch(Exception e) {
-            System.out.println("failed (" + e.getClass() + " thrown instead of RuntimeException).");
+        } catch(Error e) {
+            System.out.println("failed (" + e.getClass() + " thrown instead of java.lang.UnknownError).");
             System.out.println("Message: " + e.getMessage() + "\n");
             return false;
         }
@@ -310,8 +355,10 @@ public class JavaSWIGTest {
         successful         &= OverflowErrorTest();
         successful         &= UnderflowErrorTest();
         successful         &= RuntimeErrorTest();
-        successful         &= RuntimeErrorTest();
+        successful         &= IOErrorTest();
+        successful         &= ValueErrorTest();
         successful         &= StdExceptionTest();
+        successful         &= UnknownErrorTest();
 
         if(successful) {
             System.exit(0);
