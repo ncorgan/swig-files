@@ -1,3 +1,5 @@
+![Travis-CI Build](https://travis-ci.org/ncorgan/swig-files.svg)
+
 This repo contains useful SWIG and CMake macros I've written or used
 over the years.
 
@@ -10,4 +12,4 @@ over the years.
  * SWIGJava.cmake: CMake macros for building Java SWIG modules
  * SWIGPython.cmake: CMake macro for building Python SWIG modules
 
-README last updated: 2016/06/08
+README last updated: 2016/07/03
