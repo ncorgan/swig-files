@@ -41,6 +41,8 @@ public class JavaSWIGTest {
         } else {
             try {
                 swigtest_java.throw_boost_exception();
+                System.out.println("failed (no exception thrown).\n");
+                return false;
             } catch(RuntimeException e) {
                 if(!e.getMessage().contains("boost::exception")) {
                     System.out.println("failed (e.getMessage() = \"" + e.getMessage() + "\" and does not contain \"boost::exception\").\n");

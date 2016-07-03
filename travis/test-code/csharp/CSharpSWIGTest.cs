@@ -9,7 +9,7 @@ public class CSharpSWIGTest {
     public static bool BoostExceptionTest() {
         System.Console.Write("Starting BoostExceptionTest...");
         string swigWrapBoostExceptions = System.Environment.GetEnvironmentVariable("SWIG_WRAP_BOOST_EXCEPTIONS");
-        if(swigWrapBoostExceptions == null) {
+        if(swigWrapBoostExceptions == null || swigWrapBoostExceptions.Equals("")) {
             try {
                 SWIGTestCSharp.throw_boost_exception();
             } catch(System.Exception e) {
