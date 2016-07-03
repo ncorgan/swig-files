@@ -7,6 +7,6 @@
 #
 
 sudo apt-get -y update
-sudo apt-get -y install build-essential git cmake 'swig*' \
-                        gcc g++ doxygen mono-complete default-jre \
+sudo apt-get -y install build-essential git cmake swig gcc \
+                        g++ doxygen mono-complete default-jre \
                         libpython-dev libboost-dev python-ply \

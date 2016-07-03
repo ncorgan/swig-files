@@ -8,4 +8,4 @@ before_install:
   - bash travis/install-deps.sh
 
 script:
-  - bash travis/build.sh
+  - bash travis/build-test.sh

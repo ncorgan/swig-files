@@ -7,18 +7,10 @@
 #
 
 export TOPLEVEL_DIR=$PWD/travis/test-code
-mkdir $TOPLEVEL_DIR/build-swig2 $TOPLEVEL_DIR/build-swig3
+mkdir $TOPLEVEL_DIR/build
 
-cd $TOPLEVEL_DIR/build-swig2
-cmake -DSWIG_EXECUTABLE=/usr/bin/swig2.0 ..
+cd $TOPLEVEL_DIR/build
+cmake ..
 make
 [ $? -ne 0 ] && exit 1
 ctest --verbose
-[ $? -ne 0 ] && exit 1
-
-cd ../build-swig3
-cmake -DSWIG_EXECUTABLE=/usr/bin/swig3.0 ..
-make
-[ $? -ne 0 ] && exit 1
-ctest --verbose
-[ $? -ne 0 ] && exit 1
