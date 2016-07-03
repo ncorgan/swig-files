@@ -144,3 +144,18 @@ MACRO(JAVA_BUILD_JAR jar_name swig_modules package_name manifest_txt)
         COMPONENT Java
     )
 ENDMACRO(JAVA_BUILD_JAR)
+
+MACRO(JAVA_BUILD_PROGRAM program_name jar_name)
+    ADD_CUSTOM_COMMAND(
+        DEPENDS ${jar_name}
+        DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${program_name}.java
+        OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${program_name}.class
+        COMMAND ${Java_JAVAC_EXECUTABLE} -classpath ${jar_name} -d ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/${program_name}.java
+        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+        COMMENT "Building Java program ${program_name}"
+    )
+    ADD_CUSTOM_TARGET(
+        ${program_name} ALL
+        DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${program_name}.class
+    )
+ENDMACRO(JAVA_BUILD_PROGRAM program_name jar_name)

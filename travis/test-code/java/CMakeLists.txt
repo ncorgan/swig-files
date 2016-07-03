@@ -22,5 +22,9 @@ SET(SWIG_JAVA_LIBRARIES
     swigtest
 )
 
+# Build SWIG module and Java JAR
 SWIG_BUILD_JAVA_MODULE(swigtest_java SWIGTestJava TRUE)
 JAVA_BUILD_JAR(SWIGTest.jar "swigtest_java" SWIGTestJava "")
+
+# Build test
+JAVA_BUILD_PROGRAM(JavaSWIGTest SWIGTest.jar)

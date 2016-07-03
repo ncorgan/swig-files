@@ -29,7 +29,7 @@ public class CSharpSWIGTest {
                     System.Console.WriteLine("success.\n");
                     return true;
                 } else {
-                    System.Console.WriteLine("failed (e.Message = \"" + e.Message +"\" and does not contain \"boost::exception\"");
+                    System.Console.WriteLine("failed (e.Message = \"" + e.Message +"\" and does not contain \"boost::exception\".\n");
                     return false;
                 }
             } catch(System.Exception e) {

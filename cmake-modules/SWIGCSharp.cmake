@@ -38,6 +38,13 @@
 #  * dll_name: the name of the DLL to be produced (no extension)
 #  * swig_modules: SWIG modules made with SWIG_BUILD_CSHARP_MODULE
 #
+# CSHARP_BUILD_EXE: Build a C# program. Meant to be used after the
+#                   previous macro.
+#
+# Parameters:
+#  * exe_name: program name (no extension)
+#  * swig_dll: SWIG-generated C# DLL to be used as a reference
+#
 # Example (mymodule1.i, mymodule2.i):
 #  * In CMake:
 #        SWIG_BUILD_CSHARP_MODULE(mymodule1 MyModule1 TRUE)
