@@ -9,7 +9,7 @@
 JAVA_INIT("swigtest_java")
 
 %include <swig_exceptions.i>
-SWIG_CATCH_EXCEPTIONS
+SWIG_CATCH_DEFAULT
 
 %{
     #include "test_fcns.hpp"

@@ -182,13 +182,13 @@ public class JavaSWIGTest {
 
         try {
             swigtest_java.throw_range_error();
-        } catch(IndexOutOfBoundsException e) {
+        } catch(RuntimeException e) {
             if(!e.getMessage().equals("std::range_error")) {
                 System.out.println("failed (e.getMessage() = \"" + e.getMessage() + "\" instead of \"std::range_error\").\n");
                 return false;
             }
         } catch(Exception e) {
-            System.out.println("failed (" + e.getClass() + " thrown instead of IndexOutOfBoundsException).");
+            System.out.println("failed (" + e.getClass() + " thrown instead of RuntimeException).");
             System.out.println("Message: " + e.getMessage() + "\n");
             return false;
         }
@@ -202,13 +202,13 @@ public class JavaSWIGTest {
 
         try {
             swigtest_java.throw_overflow_error();
-        } catch(ArithmeticException e) {
+        } catch(IndexOutOfBoundsException e) {
             if(!e.getMessage().equals("std::overflow_error")) {
                 System.out.println("failed (e.getMessage() = \"" + e.getMessage() + "\" instead of \"std::overflow_error\").\n");
                 return false;
             }
         } catch(Exception e) {
-            System.out.println("failed (" + e.getClass() + " thrown instead of ArithmeticException).");
+            System.out.println("failed (" + e.getClass() + " thrown instead of IndexOutOfBoundsException).");
             System.out.println("Message: " + e.getMessage() + "\n");
             return false;
         }
@@ -222,13 +222,13 @@ public class JavaSWIGTest {
 
         try {
             swigtest_java.throw_underflow_error();
-        } catch(ArithmeticException e) {
+        } catch(RuntimeException e) {
             if(!e.getMessage().equals("std::underflow_error")) {
                 System.out.println("failed (e.getMessage() = \"" + e.getMessage() + "\" instead of \"std::underflow_error\").\n");
                 return false;
             }
         } catch(Exception e) {
-            System.out.println("failed (" + e.getClass() + " thrown instead of ArithmeticException).");
+            System.out.println("failed (" + e.getClass() + " thrown instead of RuntimeException).");
             System.out.println("Message: " + e.getMessage() + "\n");
             return false;
         }

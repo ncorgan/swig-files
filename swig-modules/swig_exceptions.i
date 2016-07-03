@@ -6,18 +6,38 @@
  */
 
 /*
- * This file adds the following macros for all languages:
+ * This file makes using SWIG exception handling easier, providing the following
+ * macros to catch all default C++ exceptions, any custom exceptions, and (with a
+ * compile flag) boost::exception and its subclasses.
  *
- * SWIG_CATCH_EXCEPTIONS - Catches std::exception and it subclasses, as well as
- *                         unknown errors. Should be used when you are not catching
- *                         any custom exceptions.
+ * The following macros are exposed:
+ *
+ * SWIG_CATCH_DEFAULT - A standard try-catch that catches std::exception and its
+ *                      subclasses. Use this if you are not using any custom
+ *                      std::exception subclasses.
  *
  * The following macros should be used when you add a custom exception.
  *
  * SWIG_TRY              - Starts a SWIG try/catch statement.
  *
- * SWIG_CUSTOM_EXCEPTION - Adds a catch statement for a custom exception. Must be a
- *                         subclass of std::exception.
+ * SWIG_CUSTOM_EXCEPTION - Adds a catch statement for a custom exception. Specify
+ *                         the C++ error name and SWIG exception enum to which it
+ *                         corresponds.
+ *
+ *                         Valid exception enums:
+ *                          * SWIG_UnknownError
+ *                          * SWIG_IOError
+ *                          * SWIG_RuntimeError
+ *                          * SWIG_IndexError
+ *                          * SWIG_TypeError
+ *                          * SWIG_DivisionByZero
+ *                          * SWIG_OverflowError
+ *                          * SWIG_SyntaxError
+ *                          * SWIG_ValueError
+ *                          * SWIG_SystemError
+ *                          * SWIG_AttributeError
+ *                          * SWIG_MemoryError
+ *                          * SWIG_NullReferenceError
  *
  * SWIG_CATCH            - Catches all standard C++ exceptions, as well as unknown
  *                         errors.
@@ -25,15 +45,15 @@
  * The following code snippet shows how to use these together.
  *
  * SWIG_TRY
- * SWIG_CUSTOM_EXCEPTION(my_first_exception)
- * SWIG_CUSTOM_EXCEPTION(my_other_exception)
+ * SWIG_CUSTOM_EXCEPTION(my_first_exception, SWIG_RuntimeError)
+ * SWIG_CUSTOM_EXCEPTION(my_other_exception, SWIG_ValueError)
  * SWIG_CATCH
  *
  * Executing SWIG with the compile flag -DSWIG_WRAP_BOOST_EXCEPTIONS will allow
- * boost::exception and any subclasses to be wrapped in a special case.
+ * SWIG_CATCH and SWIG_CATCH_DEFAULT to catch boost::exception and any subclasses.
  */
 
-%include <std_string.i>
+%include <exception.i>
 
 %{
 #ifdef SWIG_WRAP_BOOST_EXCEPTIONS
@@ -43,127 +63,10 @@
     #include <stdexcept>
 %}
 
-#if SWIGCSHARP
-
-%define _SWIG_CSHARP_EXCEPTION(cpp, csharp)
-    catch (const cpp &e) {
-        SWIG_CSharpSetPendingException(
-            csharp, e.what()
-        );
-        return $null;
-    }
-%enddef
-
-%define _SWIG_CSHARP_ARGS_EXCEPTION(cpp, csharp)
-    catch (const cpp &e) {
-        SWIG_CSharpSetPendingExceptionArgument(
-            csharp, e.what(), ""
-        );
-        return $null;
-    }
-%enddef
-
-#ifdef SWIG_WRAP_BOOST_EXCEPTIONS
-%define _SWIG_CSHARP_BOOST_EXCEPTION
-    catch (const boost::exception &e) {
-        SWIG_CSharpSetPendingException(
-            SWIG_CSharpApplicationException,
-            boost::diagnostic_information(e).c_str()
-        );
-        return $null;
-    }
-%enddef
-#else
-#define _SWIG_CSHARP_BOOST_EXCEPTION
-#endif
-
-%define SWIG_CUSTOM_EXCEPTION(name)
-    _SWIG_CSHARP_EXCEPTION(name, SWIG_CSharpApplicationException)
-%enddef
-
-%define SWIG_CATCH
-        _SWIG_CSHARP_BOOST_EXCEPTION
-        _SWIG_CSHARP_EXCEPTION(std::bad_exception, SWIG_CSharpApplicationException)
-        _SWIG_CSHARP_ARGS_EXCEPTION(std::invalid_argument, SWIG_CSharpArgumentException)
-        _SWIG_CSHARP_EXCEPTION(std::domain_error, SWIG_CSharpApplicationException)
-        _SWIG_CSHARP_EXCEPTION(std::length_error, SWIG_CSharpIndexOutOfRangeException)
-        _SWIG_CSHARP_ARGS_EXCEPTION(std::out_of_range, SWIG_CSharpArgumentOutOfRangeException)
-        _SWIG_CSHARP_EXCEPTION(std::logic_error, SWIG_CSharpApplicationException)
-        _SWIG_CSHARP_EXCEPTION(std::range_error, SWIG_CSharpIndexOutOfRangeException)
-        _SWIG_CSHARP_EXCEPTION(std::overflow_error, SWIG_CSharpOverflowException)
-        _SWIG_CSHARP_EXCEPTION(std::underflow_error, SWIG_CSharpOverflowException)
-        _SWIG_CSHARP_EXCEPTION(std::runtime_error, SWIG_CSharpApplicationException)
-        _SWIG_CSHARP_EXCEPTION(std::exception, SWIG_CSharpApplicationException)
-        catch (...) {
-            SWIG_CSharpSetPendingException(
-                SWIG_CSharpApplicationException,
-                "Unknown error."
-            );
-            return $null;
-        }
-    }
-%enddef
-
-#elif SWIGJAVA
-
-%define _SWIG_JAVA_EXCEPTION(cpp, java)
-    catch (const cpp &e) {
-        SWIG_JavaThrowException(
-            jenv, java, e.what()
-        );
-        return $null;
-    }
-%enddef
-
-#ifdef SWIG_WRAP_BOOST_EXCEPTIONS
-%define _SWIG_JAVA_BOOST_EXCEPTION
-    catch (const boost::exception &e) {
-        SWIG_JavaThrowException(
-            jenv, SWIG_JavaRuntimeException,
-            boost::diagnostic_information(e).c_str()
-        );
-        return $null;
-    }
-%enddef
-#else
-#define _SWIG_JAVA_BOOST_EXCEPTION
-#endif
-
-%define SWIG_CUSTOM_EXCEPTION(name)
-    _SWIG_JAVA_EXCEPTION(name, SWIG_JavaRuntimeException)
-%enddef
-
-%define SWIG_CATCH
-        _SWIG_JAVA_BOOST_EXCEPTION
-        _SWIG_JAVA_EXCEPTION(std::bad_exception, SWIG_JavaRuntimeException)
-        _SWIG_JAVA_EXCEPTION(std::invalid_argument, SWIG_JavaIllegalArgumentException)
-        _SWIG_JAVA_EXCEPTION(std::domain_error, SWIG_JavaRuntimeException)
-        _SWIG_JAVA_EXCEPTION(std::length_error, SWIG_JavaIndexOutOfBoundsException)
-        _SWIG_JAVA_EXCEPTION(std::out_of_range, SWIG_JavaIndexOutOfBoundsException)
-        _SWIG_JAVA_EXCEPTION(std::logic_error, SWIG_JavaRuntimeException)
-        _SWIG_JAVA_EXCEPTION(std::range_error, SWIG_JavaIndexOutOfBoundsException)
-        _SWIG_JAVA_EXCEPTION(std::overflow_error, SWIG_JavaArithmeticException)
-        _SWIG_JAVA_EXCEPTION(std::underflow_error, SWIG_JavaArithmeticException)
-        _SWIG_JAVA_EXCEPTION(std::runtime_error, SWIG_JavaRuntimeException)
-        _SWIG_JAVA_EXCEPTION(std::exception, SWIG_JavaRuntimeException)
-        catch (...) {
-            SWIG_JavaThrowException(
-                jenv, SWIG_JavaRuntimeException,
-                "Unknown error."
-            );
-            return $null;
-        }
-    }
-%enddef
-
-#else
-
-%include <typemaps/exception.swg>
-
 #ifdef SWIG_WRAP_BOOST_EXCEPTIONS
 %define _SWIG_BOOST_EXCEPTION
     catch (const boost::exception &e) {
-        SWIG_exception_fail(
+        SWIG_exception(
             SWIG_RuntimeError,
             boost::diagnostic_information(e).c_str()
         );
@@ -173,20 +76,16 @@
 #define _SWIG_BOOST_EXCEPTION
 #endif
 
-%define SWIG_CUSTOM_EXCEPTION(name)
-    catch (const name &e) {
-        SWIG_exception_fail(
-            SWIG_RuntimeError,
-            e.what()
-        );
-    }
+%define SWIG_TRY
+    %exception {
+        try { $action }
 %enddef
 
 %define SWIG_CATCH
         _SWIG_BOOST_EXCEPTION
         SWIG_CATCH_STDEXCEPT
         catch (...) {
-            SWIG_exception_fail(
+            SWIG_exception(
                 SWIG_UnknownError,
                 "Unknown error"
             );
@@ -194,14 +93,15 @@
     }
 %enddef
 
-#endif
-
-%define SWIG_TRY
-    %exception {
-        try { $action }
-%enddef
-
-%define SWIG_CATCH_EXCEPTIONS
+%define SWIG_CATCH_DEFAULT
     SWIG_TRY
     SWIG_CATCH
+%enddef
+
+%define SWIG_CUSTOM_EXCEPTION(name, err_type)
+    catch (const name &e) {
+        SWIG_exception(
+            err_type, e.what()
+        );
+    }
 %enddef

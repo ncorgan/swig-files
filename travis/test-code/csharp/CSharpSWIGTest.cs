@@ -12,8 +12,6 @@ public class CSharpSWIGTest {
         if(swigWrapBoostExceptions == null) {
             try {
                 SWIGTestCSharp.throw_boost_exception();
-                System.Console.WriteLine("success.\n");
-                return true;
             } catch(System.Exception e) {
                 System.Console.WriteLine("failed (Boost exceptions not wrapped in this build).");
                 System.Console.WriteLine("Message: " + e.Message + "\n");
@@ -25,19 +23,19 @@ public class CSharpSWIGTest {
                 System.Console.WriteLine("failed (no exception thrown).\n");
                 return false;
             } catch(System.ApplicationException e) {
-                if(e.Message.Contains("boost::exception")) {
-                    System.Console.WriteLine("success.\n");
-                    return true;
-                } else {
+                if(!e.Message.Contains("boost::exception")) {
                     System.Console.WriteLine("failed (e.Message = \"" + e.Message +"\" and does not contain \"boost::exception\".\n");
                     return false;
                 }
             } catch(System.Exception e) {
-                System.Console.WriteLine("failed (" + e.GetType() + " thrown instead of System.ApplicationException)");
+                System.Console.WriteLine("failed (" + e.GetType() + " thrown instead of System.ApplicationException).");
                 System.Console.WriteLine("Message: " + e.Message + "\n");
                 return false;
             }
         }
+
+        System.Console.WriteLine("success.\n");
+        return true;
     }
 
     public static bool BadExceptionTest() {
@@ -47,18 +45,18 @@ public class CSharpSWIGTest {
             System.Console.WriteLine("failed (no exception thrown).\n");
             return false;
         } catch(System.ApplicationException e) {
-            if(e.Message.Equals("std::bad_exception")) {
-                System.Console.WriteLine("success.\n");
-                return true;
-            } else {
+            if(!e.Message.Equals("std::bad_exception")) {
                 System.Console.WriteLine("failed (e.Message = \"" + e.Message +"\" instead of \"std::bad_exception\"\n");
                 return false;
             }
         } catch(System.Exception e) {
-            System.Console.WriteLine("failed (" + e.GetType() + " thrown instead of System.ApplicationException)");
+            System.Console.WriteLine("failed (" + e.GetType() + " thrown instead of System.ApplicationException).");
             System.Console.WriteLine("Message: " + e.Message + "\n");
             return false;
         }
+
+        System.Console.WriteLine("success.\n");
+        return true;
     }
 
     public static bool InvalidArgumentTest() {
@@ -68,18 +66,18 @@ public class CSharpSWIGTest {
             System.Console.WriteLine("failed (no exception thrown).\n");
             return false;
         } catch(System.ArgumentException e) {
-            if(e.Message.Equals("std::invalid_argument")) {
-                System.Console.WriteLine("success.\n");
-                return true;
-            } else {
+            if(!e.Message.Equals("std::invalid_argument")) {
                 System.Console.WriteLine("failed (e.Message = \"" + e.Message +"\" instead of \"std::invalid_argument\"\n");
                 return false;
             }
         } catch(System.Exception e) {
-            System.Console.WriteLine("failed (" + e.GetType() + " thrown instead of System.ArgumentException)");
+            System.Console.WriteLine("failed (" + e.GetType() + " thrown instead of System.ArgumentException).");
             System.Console.WriteLine("Message: " + e.Message + "\n");
             return false;
         }
+
+        System.Console.WriteLine("success.\n");
+        return true;
     }
 
     public static bool DomainErrorTest() {
@@ -88,19 +86,19 @@ public class CSharpSWIGTest {
             SWIGTestCSharp.throw_domain_error();
             System.Console.WriteLine("failed (no exception thrown).\n");
             return false;
-        } catch(System.ApplicationException e) {
-            if(e.Message.Equals("std::domain_error")) {
-                System.Console.WriteLine("success.\n");
-                return true;
-            } else {
+        } catch(System.ArgumentOutOfRangeException e) {
+            if(!e.Message.Equals("std::domain_error")) {
                 System.Console.WriteLine("failed (e.Message = \"" + e.Message +"\" instead of \"std::domain_error\"\n");
                 return false;
             }
         } catch(System.Exception e) {
-            System.Console.WriteLine("failed (" + e.GetType() + " thrown instead of System.ApplicationException)");
+            System.Console.WriteLine("failed (" + e.GetType() + " thrown instead of System.ArgumentOutOfRangeException).");
             System.Console.WriteLine("Message: " + e.Message + "\n");
             return false;
         }
+
+        System.Console.WriteLine("success.\n");
+        return true;
     }
 
     public static bool LengthErrorTest() {
@@ -110,18 +108,18 @@ public class CSharpSWIGTest {
             System.Console.WriteLine("failed (no exception thrown).\n");
             return false;
         } catch(System.IndexOutOfRangeException e) {
-            if(e.Message.Equals("std::length_error")) {
-                System.Console.WriteLine("success.\n");
-                return true;
-            } else {
+            if(!e.Message.Equals("std::length_error")) {
                 System.Console.WriteLine("failed (e.Message = \"" + e.Message +"\" instead of \"std::length_error\"\n");
                 return false;
             }
         } catch(System.Exception e) {
-            System.Console.WriteLine("failed (" + e.GetType() + " thrown instead of System.IndexOutOfRangeException)");
+            System.Console.WriteLine("failed (" + e.GetType() + " thrown instead of System.IndexOutOfRangeException).");
             System.Console.WriteLine("Message: " + e.Message + "\n");
             return false;
         }
+
+        System.Console.WriteLine("success.\n");
+        return true;
     }
 
     public static bool OutOfRangeTest() {
@@ -130,19 +128,19 @@ public class CSharpSWIGTest {
             SWIGTestCSharp.throw_out_of_range();
             System.Console.WriteLine("failed (no exception thrown).\n");
             return false;
-        } catch(System.ArgumentOutOfRangeException e) {
-            if(e.Message.Equals("std::out_of_range")) {
-                System.Console.WriteLine("success.\n");
-                return true;
-            } else {
+        } catch(System.IndexOutOfRangeException e) {
+            if(!e.Message.Equals("std::out_of_range")) {
                 System.Console.WriteLine("failed (e.Message = \"" + e.Message +"\" instead of \"std::out_of_range\"\n");
                 return false;
             }
         } catch(System.Exception e) {
-            System.Console.WriteLine("failed (" + e.GetType() + " thrown instead of System.ArgumentOutOfRangeException)");
+            System.Console.WriteLine("failed (" + e.GetType() + " thrown instead of System.IndexOutOfRangeException).");
             System.Console.WriteLine("Message: " + e.Message + "\n");
             return false;
         }
+
+        System.Console.WriteLine("success.\n");
+        return true;
     }
 
     public static bool LogicErrorTest() {
@@ -152,18 +150,18 @@ public class CSharpSWIGTest {
             System.Console.WriteLine("failed (no exception thrown).\n");
             return false;
         } catch(System.ApplicationException e) {
-            if(e.Message.Equals("std::logic_error")) {
-                System.Console.WriteLine("success.\n");
-                return true;
-            } else {
+            if(!e.Message.Equals("std::logic_error")) {
                 System.Console.WriteLine("failed (e.Message = \"" + e.Message +"\" instead of \"std::logic_error\"\n");
                 return false;
             }
         } catch(System.Exception e) {
-            System.Console.WriteLine("failed (" + e.GetType() + " thrown instead of System.ApplicationException)");
+            System.Console.WriteLine("failed (" + e.GetType() + " thrown instead of System.ApplicationException).");
             System.Console.WriteLine("Message: " + e.Message + "\n");
             return false;
         }
+
+        System.Console.WriteLine("success.\n");
+        return true;
     }
 
     public static bool RangeErrorTest() {
@@ -172,19 +170,19 @@ public class CSharpSWIGTest {
             SWIGTestCSharp.throw_range_error();
             System.Console.WriteLine("failed (no exception thrown).\n");
             return false;
-        } catch(System.IndexOutOfRangeException e) {
-            if(e.Message.Equals("std::range_error")) {
-                System.Console.WriteLine("success.\n");
-                return true;
-            } else {
+        } catch(System.ApplicationException e) {
+            if(!e.Message.Equals("std::range_error")) {
                 System.Console.WriteLine("failed (e.Message = \"" + e.Message +"\" instead of \"std::range_error\"\n");
                 return false;
             }
         } catch(System.Exception e) {
-            System.Console.WriteLine("failed (" + e.GetType() + " thrown instead of System.IndexOutOfRangeException)");
+            System.Console.WriteLine("failed (" + e.GetType() + " thrown instead of System.ApplicationException).");
             System.Console.WriteLine("Message: " + e.Message + "\n");
             return false;
         }
+
+        System.Console.WriteLine("success.\n");
+        return true;
     }
 
     public static bool OverflowErrorTest() {
@@ -194,18 +192,18 @@ public class CSharpSWIGTest {
             System.Console.WriteLine("failed (no exception thrown).\n");
             return false;
         } catch(System.OverflowException e) {
-            if(e.Message.Equals("std::overflow_error")) {
-                System.Console.WriteLine("success.\n");
-                return true;
-            } else {
+            if(!e.Message.Equals("std::overflow_error")) {
                 System.Console.WriteLine("failed (e.Message = \"" + e.Message +"\" instead of \"std::overflow_error\"\n");
                 return false;
             }
         } catch(System.Exception e) {
-            System.Console.WriteLine("failed (" + e.GetType() + " thrown instead of System.OverflowException)");
+            System.Console.WriteLine("failed (" + e.GetType() + " thrown instead of System.OverflowException).");
             System.Console.WriteLine("Message: " + e.Message + "\n");
             return false;
         }
+
+        System.Console.WriteLine("success.\n");
+        return true;
     }
 
     public static bool UnderflowErrorTest() {
@@ -214,19 +212,19 @@ public class CSharpSWIGTest {
             SWIGTestCSharp.throw_underflow_error();
             System.Console.WriteLine("failed (no exception thrown).\n");
             return false;
-        } catch(System.OverflowException e) {
-            if(e.Message.Equals("std::underflow_error")) {
-                System.Console.WriteLine("success.\n");
-                return true;
-            } else {
+        } catch(System.ApplicationException e) {
+            if(!e.Message.Equals("std::underflow_error")) {
                 System.Console.WriteLine("failed (e.Message = \"" + e.Message +"\" instead of \"std::underflow_error\"\n");
                 return false;
             }
         } catch(System.Exception e) {
-            System.Console.WriteLine("failed (" + e.GetType() + " thrown instead of System.OverflowException)");
+            System.Console.WriteLine("failed (" + e.GetType() + " thrown instead of System.ApplicationException).");
             System.Console.WriteLine("Message: " + e.Message + "\n");
             return false;
         }
+
+        System.Console.WriteLine("success.\n");
+        return true;
     }
 
     public static bool RuntimeErrorTest() {
@@ -236,18 +234,18 @@ public class CSharpSWIGTest {
             System.Console.WriteLine("failed (no exception thrown).\n");
             return false;
         } catch(System.ApplicationException e) {
-            if(e.Message.Equals("std::runtime_error")) {
-                System.Console.WriteLine("success.\n");
-                return true;
-            } else {
+            if(!e.Message.Equals("std::runtime_error")) {
                 System.Console.WriteLine("failed (e.Message = \"" + e.Message +"\" instead of \"std::runtime_error\"\n");
                 return false;
             }
         } catch(System.Exception e) {
-            System.Console.WriteLine("failed (" + e.GetType() + " thrown instead of System.ApplicationException)");
+            System.Console.WriteLine("failed (" + e.GetType() + " thrown instead of System.ApplicationException).");
             System.Console.WriteLine("Message: " + e.Message + "\n");
             return false;
         }
+
+        System.Console.WriteLine("success.\n");
+        return true;
     }
 
     public static bool StdExceptionTest() {
@@ -257,18 +255,18 @@ public class CSharpSWIGTest {
             System.Console.WriteLine("failed (no exception thrown).\n");
             return false;
         } catch(System.ApplicationException e) {
-            if(e.Message.Equals("std::exception")) {
-                System.Console.WriteLine("success.\n");
-                return true;
-            } else {
+            if(!e.Message.Equals("std::exception")) {
                 System.Console.WriteLine("failed (e.Message = \"" + e.Message +"\" instead of \"std::exception\"\n");
                 return false;
             }
         } catch(System.Exception e) {
-            System.Console.WriteLine("failed (" + e.GetType() + " thrown instead of System.ApplicationException)");
+            System.Console.WriteLine("failed (" + e.GetType() + " thrown instead of System.ApplicationException).");
             System.Console.WriteLine("Message: " + e.Message + "\n");
             return false;
         }
+
+        System.Console.WriteLine("success.\n");
+        return true;
     }
 
     public static bool UnknownErrorTest() {
@@ -278,18 +276,18 @@ public class CSharpSWIGTest {
             System.Console.WriteLine("failed (no exception thrown).\n");
             return false;
         } catch(System.ApplicationException e) {
-            if(e.Message.Equals("Unknown error.")) {
-                System.Console.WriteLine("success.\n");
-                return true;
-            } else {
-                System.Console.WriteLine("failed (e.Message = \"" + e.Message +"\" instead of \"Unknown error.\"\n");
+            if(!e.Message.Equals("Unknown error")) {
+                System.Console.WriteLine("failed (e.Message = \"" + e.Message +"\" instead of \"Unknown error\"\n");
                 return false;
             }
         } catch(System.Exception e) {
-            System.Console.WriteLine("failed (" + e.GetType() + " thrown instead of System.ApplicationException)");
+            System.Console.WriteLine("failed (" + e.GetType() + " thrown instead of System.ApplicationException).");
             System.Console.WriteLine("Message: " + e.Message + "\n");
             return false;
         }
+
+        System.Console.WriteLine("success.\n");
+        return true;
     }
 
     public static int Main(string[] args) {
