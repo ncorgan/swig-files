@@ -16,5 +16,8 @@ SWIG_CUSTOM_EXCEPTION(io_error,    SWIG_IOError)
 SWIG_CUSTOM_EXCEPTION(value_error, SWIG_ValueError)
 SWIG_CATCH
 
+// Documentation
+%include "swigtest_python_docs.i"
+
 %include "swigtest_common.h"
 %include "test_fcns.hpp"

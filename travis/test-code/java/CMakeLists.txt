@@ -16,14 +16,36 @@ SET(SWIG_MODULE_DIR
 )
 SET(SWIG_JAVA_INCLUDE_DIRS
     ${CMAKE_SOURCE_DIR}
+    ${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_SOURCE_DIR}/../../swig-modules
 )
 SET(SWIG_JAVA_LIBRARIES
     swigtest
 )
 
+# Generate C# docstrings
+SET(SWIG_LANGUAGE "java")
+CONFIGURE_FILE(
+    ${CMAKE_SOURCE_DIR}/generate_swig_docstrings.py.in
+    ${CMAKE_CURRENT_BINARY_DIR}/generate_java_docstrings.py
+@ONLY)
+FILE(GLOB_RECURSE header_files ${CMAKE_SOURCE_DIR} "*.h*")
+ADD_CUSTOM_COMMAND(
+    DEPENDS ${CMAKE_SOURCE_DIR}/generate_swig_docstrings.py.in
+    DEPENDS ${header_files}
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/../../python-scripts
+    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/swigtest_java_docs.i
+    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/generate_java_docstrings.py
+    COMMENT "Generating swigtest_java_docs.i"
+)
+ADD_CUSTOM_TARGET(
+    swigtest_java_docs_i ALL
+    DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/swigtest_java_docs.i
+)
+
 # Build SWIG module and Java JAR
 SWIG_BUILD_JAVA_MODULE(swigtest_java SWIGTestJava TRUE)
+ADD_DEPENDENCIES(${SWIG_MODULE_swigtest_java_REAL_NAME} swigtest_java_docs_i)
 JAVA_BUILD_JAR(SWIGTest.jar "swigtest_java" SWIGTestJava "")
 
 # Build test

@@ -1,0 +1,94 @@
+#!/usr/bin/env python
+#
+# Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+#
+# Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
+# or copy at http://opensource.org/licenses/MIT)
+#
+
+CMAKE_SOURCE_DIR         = "@CMAKE_SOURCE_DIR@"
+CMAKE_CURRENT_BINARY_DIR = "@CMAKE_CURRENT_BINARY_DIR@"
+SWIG_LANGUAGE            = "@SWIG_LANGUAGE@"
+
+import optparse
+import sys
+sys.path.append(CMAKE_SOURCE_DIR + "/../../python-scripts")
+
+import CppHeaderParser
+import swigdoc_converter
+
+def get_csharp_docs(header):
+    output = ""
+
+    for fcn in header.functions:
+        if "operator" not in fcn["name"].lower() and "anon" not in fcn["name"].lower() and "doxygen" in fcn:
+            output += "%s\n" % swigdoc_converter.documentation(fcn).swig_csharp_docs()
+
+    for cls in header.classes:
+        if "doxygen" in header.classes[cls]:
+            cls_csharp_docs = "%s\n" % swigdoc_converter.documentation(header.classes[cls]).swig_csharp_docs()
+            output += cls_csharp_docs
+
+        for fcn in header.classes[cls]["methods"]["public"]:
+            if "operator" not in fcn["name"].lower() and not fcn["destructor"] and "doxygen" in fcn:
+                output += "%s\n" % swigdoc_converter.documentation(fcn).swig_csharp_docs()
+
+    return output
+
+def get_java_docs(header):
+    output = ""
+
+    for fcn in header.functions:
+        if "operator" not in fcn["name"].lower() and "anon" not in fcn["name"].lower() and "doxygen" in fcn:
+            output += "%s\n" % swigdoc_converter.documentation(fcn).swig_javadoc()
+
+    for cls in header.classes:
+        if "doxygen" in header.classes[cls]:
+            cls_javadoc = "%s\n" % swigdoc_converter.documentation(header.classes[cls]).swig_javadoc()
+            output += cls_javadoc
+
+        for fcn in header.classes[cls]["methods"]["public"]:
+            if "operator" not in fcn["name"].lower() and not fcn["destructor"] and "doxygen" in fcn:
+                output += "%s\n" % swigdoc_converter.documentation(fcn).swig_javadoc()
+
+    return output
+
+def get_python_docs(header):
+    output = ""
+
+    for fcn in header.functions:
+        if "operator" not in fcn["name"].lower() and "anon" not in fcn["name"].lower() and "doxygen" in fcn:
+            output += "%s\n" % swigdoc_converter.documentation(fcn).swig_python_docstring()
+
+    for cls in header.classes:
+        if "doxygen" in header.classes[cls]:
+            cls_python_docstring = "%s\n" % swigdoc_converter.documentation(header.classes[cls]).swig_python_docstring()
+            output += cls_python_docstring
+
+        for fcn in header.classes[cls]["methods"]["public"]:
+            if "operator" not in fcn["name"].lower() and not fcn["destructor"] and "doxygen" in fcn:
+                output += "%s\n" % swigdoc_converter.documentation(fcn).swig_python_docstring()
+
+    return output
+
+SWIG_DOC_FUNCTIONS = {
+    "csharp" : get_csharp_docs,
+    "java"   : get_java_docs,
+    "python" : get_python_docs
+}
+
+SWIGTEST_HEADERS = [
+    CppHeaderParser.CppHeader("{0}/test_class.hpp".format(CMAKE_SOURCE_DIR)),
+    CppHeaderParser.CppHeader("{0}/test_fcns.hpp".format(CMAKE_SOURCE_DIR)),
+]
+
+if __name__ == "__main__":
+
+    output_str = ""
+    for header in SWIGTEST_HEADERS:
+        output_str += SWIG_DOC_FUNCTIONS[SWIG_LANGUAGE](header)
+
+    output_filename = "{0}/swigtest_{1}_docs.i".format(CMAKE_CURRENT_BINARY_DIR, SWIG_LANGUAGE)
+    f = open(output_filename, "w")
+    f.write(output_str)
+    f.close()

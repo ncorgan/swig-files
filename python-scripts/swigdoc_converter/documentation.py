@@ -11,7 +11,7 @@ import CppHeaderParser
 import sys
 import unicodedata
 
-MAJOR_PYTHON_VERSION = sys.version_info[0]
+PYTHON_MAJOR_VERSION = sys.version_info[0]
 
 """
 C# exceptions corresponding to C++ exceptions.
@@ -67,74 +67,6 @@ PYTHON_EXCEPTIONS = {
     "std::exception"        : "SystemError",
 }
 
-"""
-Returns namespace + class name (if applicable) + function name (if applicable).
-"""
-def __assemble_full_name(cpp_input, is_class):
-    full_name = ""
-
-    if cpp_input.get("parent",None) != None:
-        full_name = "%s::%s" % (__assemble_full_name(cpp_input["parent"], True), cpp_input["name"])
-        if not is_class:
-            full_name += "("
-            for param in cpp_input["parameters"]:
-                full_name += "%s %s, " % (param["type"], param["name"])
-            if len(cpp_input["parameters"]) > 0:
-                full_name = full_name[:-2]
-            full_name += ")"
-            if cpp_input["const"]:
-                full_name += " const"
-    else:
-        if is_class:
-            return "%s::%s" % (cpp_input["namespace"], cpp_input["name"])
-        else:
-            return "%s%s" % (cpp_input["namespace"], cpp_input["name"])
-
-    return full_name
-
-# http://stackoverflow.com/a/925630
-def __remove_html(string):
-    if PYTHON_MAJOR_VERSION == 2:
-        from HTMLParser import HTMLParser
-
-        class MLStripper(HTMLParser):
-            def __init__(self):
-                self.reset()
-                self.fed = []
-            def handle_data(self, d):
-                self.fed.append(d)
-            def get_data(self):
-                return ''.join(self.fed)
-
-    else:
-        from html.parser import HTMLParser
-
-        class MLStripper(HTMLParser):
-            def __init__(self):
-                self.reset()
-                self.strict = False
-                self.convert_charrefs= True
-                self.fed = []
-            def handle_data(self, d):
-                self.fed.append(d)
-            def get_data(self):
-                return ''.join(self.fed)
-
-    s = MLStripper()
-    s.feed(string)
-    return s.get_data()
-
-def __cleanup_python_string(string):
-    if MAJOR_PYTHON_VERSION == 2:
-        string = unicodedata.normalize("NFKD", string).encode("ascii", "ignore")
-
-    try:
-        string = __remove_html(string)
-    except:
-        pass
-
-    return string
-
 class documentation():
 
     def __init__(self, cpp_input):
@@ -143,7 +75,7 @@ class documentation():
 
         self.__input = cpp_input
         self.__class = ("CppClass" in str(type(self.__input)))
-        self.__full_name = __assemble_full_name(self.__input, self.__class)
+        self.__full_name = self.__assemble_full_name(self.__input, self.__class)
         self.__short_doc = ""
         self.__long_doc = ""
         self.__returns = ""
@@ -174,6 +106,74 @@ class documentation():
                         self.__long_doc += "%s\n" % line[2:].replace("\"","\\\"")
 
     """
+    Returns namespace + class name (if applicable) + function name (if applicable).
+    """
+    def __assemble_full_name(self, cpp_input, is_class):
+        full_name = ""
+
+        if cpp_input.get("parent",None) != None:
+            full_name = "%s::%s" % (self.__assemble_full_name(cpp_input["parent"], True), cpp_input["name"])
+            if not is_class:
+                full_name += "("
+                for param in cpp_input["parameters"]:
+                    full_name += "%s %s, " % (param["type"], param["name"])
+                if len(cpp_input["parameters"]) > 0:
+                    full_name = full_name[:-2]
+                full_name += ")"
+                if cpp_input["const"]:
+                    full_name += " const"
+        else:
+            if is_class:
+                return "%s::%s" % (cpp_input["namespace"], cpp_input["name"])
+            else:
+                return "%s%s" % (cpp_input["namespace"], cpp_input["name"])
+
+        return full_name
+
+    # http://stackoverflow.com/a/925630
+    def __remove_html(self, string):
+        if PYTHON_MAJOR_VERSION == 2:
+            from HTMLParser import HTMLParser
+
+            class MLStripper(HTMLParser):
+                def __init__(self):
+                    self.reset()
+                    self.fed = []
+                def handle_data(self, d):
+                    self.fed.append(d)
+                def get_data(self):
+                    return ''.join(self.fed)
+
+        else:
+            from html.parser import HTMLParser
+
+            class MLStripper(HTMLParser):
+                def __init__(self):
+                    self.reset()
+                    self.strict = False
+                    self.convert_charrefs= True
+                    self.fed = []
+                def handle_data(self, d):
+                    self.fed.append(d)
+                def get_data(self):
+                    return ''.join(self.fed)
+
+        s = MLStripper()
+        s.feed(string)
+        return s.get_data()
+
+    def __cleanup_python_string(self, string):
+        if PYTHON_MAJOR_VERSION == 2:
+            string = unicodedata.normalize("NFKD", string.decode("utf-8")).encode("ascii", "ignore")
+
+        try:
+            string = self.__remove_html(string)
+        except:
+            pass
+
+        return string
+
+    """
     Returns the original C++ Doxygen documentation. CppHeaderParser ruins the Doxygen
     syntax of the original documentation, so this returns how it should look.
     """
@@ -198,25 +198,25 @@ class documentation():
     """
     Returns a C# XML comment corresponding to the given class/function.
     """
-    def __csharp_doc(self):
+    def __csharp_docs(self):
         output = ""
         if self.__short_doc != "":
-            output += "/// <summary>%s</summary>" % __remove_html(self.__short_doc).replace("\n","")
+            output += "/// <summary>%s</summary>" % self.__remove_html(self.__short_doc).replace("\n","")
         if self.__long_doc != "":
             output += "\n/// <remarks>\n"
             for line in self.__long_doc.split("\n"):
-                output += "/// %s\n" % __remove_html(line).replace("\n","")
+                output += "/// %s\n" % self.__remove_html(line).replace("\n","")
             output += "/// </remarks>"
 
         if self.__class:
             return "using System;\nusing System.Runtime.InteropServices;\n%s" % output
 
         for key in self.__throws:
-            output += "\n/// <exception cref=\\\"%s\\\">%s</exception>" % (CSHARP_EXCEPTIONS.get(key, "System.ApplicationException"), __remove_html(self.__throws[key]).replace("\n",""))
+            output += "\n/// <exception cref=\\\"%s\\\">%s</exception>" % (CSHARP_EXCEPTIONS.get(key, "System.ApplicationException"), self.__remove_html(self.__throws[key]).replace("\n",""))
         for key in self.__params:
-            output += "\n/// <param name=\\\"%s\\\">%s</param>" % (key, __remove_html(self.__params[key]).replace("\n",""))
+            output += "\n/// <param name=\\\"%s\\\">%s</param>" % (key, self.__remove_html(self.__params[key]).replace("\n",""))
         if self.__returns != "":
-            output += "\n/// <returns>%s</returns>" % __remove_html(self.__returns).replace("\n","")
+            output += "\n/// <returns>%s</returns>" % self.__remove_html(self.__returns).replace("\n","")
 
         return output
 
@@ -264,17 +264,17 @@ class documentation():
     def swig_python_docstring(self):
         output = "%%feature(\"docstring\") %s \"" % self.__full_name
         if self.__short_doc != "":
-            output += "%s\n\n" % __cleanup_python_string(self.__short_doc)
+            output += "%s\n\n" % self.__cleanup_python_string(self.__short_doc)
         if self.__long_doc != "":
-            output += "%s\n\n" % __cleanup_python_string(self.__long_doc)
+            output += "%s\n\n" % self.__cleanup_python_string(self.__long_doc)
         if len(self.__throws.keys()) > 0:
             output += "\nThrows:\n"
             for key in self.__throws:
-                output += "    %s : %s\n" % (PYTHON_EXCEPTIONS.get(key, "RuntimeError"), __cleanup_python_string(self.__throws[key]))
+                output += "    %s : %s\n" % (PYTHON_EXCEPTIONS.get(key, "RuntimeError"), self.__cleanup_python_string(self.__throws[key]))
         if len(self.__params.keys()) > 0:
             output += "\nArgs:\n"
             for key in self.__params:
-                output += "    %s : %s\n" % (key, __cleanup_python_string(self.__params[key]))
+                output += "    %s : %s\n" % (key, self.__cleanup_python_string(self.__params[key]))
         output += "\""
 
         return output
