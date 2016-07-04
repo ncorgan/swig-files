@@ -12,6 +12,8 @@ import os
 import sys
 import traceback
 
+PYTHON_MAJOR_VERSION = sys.version_info[0]
+
 def boost_exception_test():
     swig_wrap_boost_exceptions = os.environ["SWIG_WRAP_BOOST_EXCEPTIONS"]
 
@@ -178,9 +180,10 @@ def io_error_test():
     try:
         swigtest_python.throw_io_error()
     except:
+        errname = "IOError" if PYTHON_MAJOR_VERSION == 2 else "OSError"
         exc_type, exc_value, exc_traceback = sys.exc_info()
-        if "IOError" not in str(exc_type):
-            print("failed. Threw {0} instead of IOError.\n".format(exc_type))
+        if errname not in str(exc_type):
+            print("failed. Threw {0} instead of {1}.\n".format(exc_type, errname))
             return False
         elif str(exc_value) != "io_error":
             print("failed (exc_value = \"{0}\" instead of \"io_error\").\n".format(exc_value))
