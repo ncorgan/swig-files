@@ -21,4 +21,5 @@ SWIG_CUSTOM_EXCEPTION(value_error, SWIG_ValueError)
 SWIG_CATCH
 
 %include <java/java_env.i>
+%include "swigtest_common.h"
 %include "test_fcns.hpp"

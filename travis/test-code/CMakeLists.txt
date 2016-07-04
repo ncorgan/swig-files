@@ -28,7 +28,12 @@ IF(SWIG_WRAP_BOOST_EXCEPTIONS)
     ADD_DEFINITIONS(-DSWIG_WRAP_BOOST_EXCEPTIONS)
 ENDIF(SWIG_WRAP_BOOST_EXCEPTIONS)
 
-ADD_LIBRARY(swigtest SHARED test_fcns.cpp)
+SET(swigtest_sources
+    test_class.cpp
+    test_fcns.cpp
+)
+
+ADD_LIBRARY(swigtest SHARED ${swigtest_sources})
 
 ADD_SUBDIRECTORY(csharp)
 ADD_SUBDIRECTORY(java)
