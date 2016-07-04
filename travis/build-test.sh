@@ -7,10 +7,18 @@
 #
 
 export TOPLEVEL_DIR=$PWD/travis/test-code
-mkdir $TOPLEVEL_DIR/build
+mkdir $TOPLEVEL_DIR/build $TOPLEVEL_DIR/build-with-boost
 
 cd $TOPLEVEL_DIR/build
 cmake ..
 make
 [ $? -ne 0 ] && exit 1
+ctest --verbose
+[ $? -ne 0 ] && exit 1
+
+cd $TOPLEVEL_DIR/build-with-boost
+cmake -DSWIG_WRAP_BOOST_EXCEPTIONS=ON ..
+make
+[ $? -ne 0 ] && exit 1
+export SWIG_WRAP_BOOST_EXCEPTIONS=1
 ctest --verbose
