@@ -9,13 +9,14 @@
 import CppHeaderParser
 
 import sys
+import unicodedata
 
 MAJOR_PYTHON_VERSION = sys.version_info[0]
 
 """
 C# exceptions corresponding to C++ exceptions.
 """
-csharp_exceptions = {
+CSHARP_EXCEPTIONS = {
     "boost::exception"      : "System.ApplicationException",
     "std::bad_exception"    : "System.ApplicationException",
     "std::invalid_argument" : "System.ArgumentException",
@@ -33,7 +34,7 @@ csharp_exceptions = {
 """
 Java exceptions corresponding to C++ exceptions.
 """
-java_exceptions = {
+JAVA_EXCEPTIONS = {
     "boost::exception"      : "java.lang.RuntimeException",
     "std::bad_exception"    : "java.lang.RuntimeException",
     "std::invalid_argument" : "java.lang.IllegalArgumentException",
@@ -51,7 +52,7 @@ java_exceptions = {
 """
 Python exceptions corresponding to C++ exceptions.
 """
-python_exceptions = {
+PYTHON_EXCEPTIONS = {
     "boost::exception"      : "RuntimeError",
     "std::bad_exception"    : "SystemError",
     "std::invalid_argument" : "ValueError",
@@ -69,11 +70,11 @@ python_exceptions = {
 """
 Returns namespace + class name (if applicable) + function name (if applicable).
 """
-def assemble_full_name(cpp_input, is_class):
+def __assemble_full_name(cpp_input, is_class):
     full_name = ""
 
     if cpp_input.get("parent",None) != None:
-        full_name = "%s::%s" % (assemble_full_name(cpp_input["parent"], True), cpp_input["name"])
+        full_name = "%s::%s" % (__assemble_full_name(cpp_input["parent"], True), cpp_input["name"])
         if not is_class:
             full_name += "("
             for param in cpp_input["parameters"]:
@@ -92,7 +93,7 @@ def assemble_full_name(cpp_input, is_class):
     return full_name
 
 # http://stackoverflow.com/a/925630
-def remove_html(string):
+def __remove_html(string):
     if PYTHON_MAJOR_VERSION == 2:
         from HTMLParser import HTMLParser
 
@@ -123,6 +124,17 @@ def remove_html(string):
     s.feed(string)
     return s.get_data()
 
+def __cleanup_python_string(string):
+    if MAJOR_PYTHON_VERSION == 2:
+        string = unicodedata.normalize("NFKD", string).encode("ascii", "ignore")
+
+    try:
+        string = __remove_html(string)
+    except:
+        pass
+
+    return string
+
 class documentation():
 
     def __init__(self, cpp_input):
@@ -131,7 +143,7 @@ class documentation():
 
         self.__input = cpp_input
         self.__class = ("CppClass" in str(type(self.__input)))
-        self.__full_name = assemble_full_name(self.__input, self.__class)
+        self.__full_name = __assemble_full_name(self.__input, self.__class)
         self.__short_doc = ""
         self.__long_doc = ""
         self.__returns = ""
@@ -186,25 +198,25 @@ class documentation():
     """
     Returns a C# XML comment corresponding to the given class/function.
     """
-    def __csharp_docs(self):
+    def __csharp_doc(self):
         output = ""
         if self.__short_doc != "":
-            output += "/// <summary>%s</summary>" % remove_html(self.__short_doc).replace("\n","")
+            output += "/// <summary>%s</summary>" % __remove_html(self.__short_doc).replace("\n","")
         if self.__long_doc != "":
             output += "\n/// <remarks>\n"
             for line in self.__long_doc.split("\n"):
-                output += "/// %s\n" % remove_html(line).replace("\n","")
+                output += "/// %s\n" % __remove_html(line).replace("\n","")
             output += "/// </remarks>"
 
         if self.__class:
             return "using System;\nusing System.Runtime.InteropServices;\n%s" % output
 
         for key in self.__throws:
-            output += "\n/// <exception cref=\\\"%s\\\">%s</exception>" % (csharp_exceptions.get(key, "System.ApplicationException"), remove_html(self.__throws[key]).replace("\n",""))
+            output += "\n/// <exception cref=\\\"%s\\\">%s</exception>" % (CSHARP_EXCEPTIONS.get(key, "System.ApplicationException"), __remove_html(self.__throws[key]).replace("\n",""))
         for key in self.__params:
-            output += "\n/// <param name=\\\"%s\\\">%s</param>" % (key, remove_html(self.__params[key]).replace("\n",""))
+            output += "\n/// <param name=\\\"%s\\\">%s</param>" % (key, __remove_html(self.__params[key]).replace("\n",""))
         if self.__returns != "":
-            output += "\n/// <returns>%s</returns>" % remove_html(self.__returns).replace("\n","")
+            output += "\n/// <returns>%s</returns>" % __remove_html(self.__returns).replace("\n","")
 
         return output
 
@@ -226,7 +238,7 @@ class documentation():
                 output += " * %s\n" % line
             output += " *\n"
         for key in self.__throws:
-            output += " * @throws %s %s\n" % (java_exceptions.get(key, "java.lang.RuntimeException"), self.__throws[key])
+            output += " * @throws %s %s\n" % (JAVA_EXCEPTIONS.get(key, "java.lang.RuntimeException"), self.__throws[key])
         for key in self.__params:
             output += " * @param %s %s\n" % (key, self.__params[key])
         if self.__returns != "":
@@ -247,47 +259,22 @@ class documentation():
     """
     Returns a SWIG %feature("docstring") line corresponding to the given class/function.
 
+    All HTML is stripped from the documentation, and Unicode is converted to ASCII in Python 2.
     """
     def swig_python_docstring(self):
         output = "%%feature(\"docstring\") %s \"" % self.__full_name
         if self.__short_doc != "":
-            if MAJOR_PYTHON_VERSION == 2:
-                try:
-                    output += "%s\n\n" % remove_html(self.__short_doc).decode("utf-8").replace(u"\u00e9", "e").encode("utf-8")
-                except:
-                    output += "%s\n\n" % self.__short_doc.decode("utf-8").replace(u"\u00e9", "e").encode("utf-8")
-            else:
-                try:
-                    output += "%s\n\n" % remove_html(self.__short_doc)
-                except:
-                    output += "%s\n\n" % self.__short_doc
+            output += "%s\n\n" % __cleanup_python_string(self.__short_doc)
         if self.__long_doc != "":
-            if MAJOR_PYTHON_VERSION == 2:
-                try:
-                    output += remove_html(self.__long_doc).decode("utf-8").replace(u"\u00e9", "e").encode("utf-8")
-                except:
-                    output += self.__long_doc.decode("utf-8").replace(u"\u00e9", "e").encode("utf-8")
-            else:
-                try:
-                    output += remove_html(self.__long_doc)
-                except:
-                    output += self.__long_doc.decode("utf-8")
+            output += "%s\n\n" % __cleanup_python_string(self.__long_doc)
         if len(self.__throws.keys()) > 0:
             output += "\nThrows:\n"
-            if MAJOR_PYTHON_VERSION == 2:
-                for key in self.__throws:
-                    output += "    %s : %s\n" % (python_exceptions.get(key, "RuntimeError"), self.__throws[key].decode("utf-8").replace(u"\u00e9", "e").encode("utf-8)"))
-            else:
-                for key in self.__throws:
-                    output += "    %s : %s\n" % (python_exceptions.get(key, "RuntimeError"), self.__throws[key])
+            for key in self.__throws:
+                output += "    %s : %s\n" % (PYTHON_EXCEPTIONS.get(key, "RuntimeError"), __cleanup_python_string(self.__throws[key]))
         if len(self.__params.keys()) > 0:
             output += "\nArgs:\n"
-            if MAJOR_PYTHON_VERSION == 2:
-                for key in self.__params:
-                    output += "    %s : %s\n" % (key, self.__params[key].decode("utf-8").replace(u"\u00e9", "e").encode("utf-8)"))
-            else:
-                for key in self.__params:
-                    output += "    %s : %s\n" % (key, self.__params[key])
+            for key in self.__params:
+                output += "    %s : %s\n" % (key, __cleanup_python_string(self.__params[key]))
         output += "\""
 
         return output
