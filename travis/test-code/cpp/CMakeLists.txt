@@ -15,12 +15,12 @@ INCLUDE_DIRECTORIES(
     ${Boost_INCLUDE_DIRS}
 )
 
-SET(swigtest_sources
+SET(swigtest_cpp_sources
     test_class.cpp
     test_fcns.cpp
 )
 
-ADD_LIBRARY(swigtest SHARED ${swigtest_sources})
+ADD_LIBRARY(swigtest-cpp SHARED ${swigtest_cpp_sources})
 
 ADD_SUBDIRECTORY(csharp)
 ADD_SUBDIRECTORY(java)

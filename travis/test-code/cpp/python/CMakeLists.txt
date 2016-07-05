@@ -19,7 +19,7 @@ SET(SWIG_PYTHON_INCLUDE_DIRS
     ${CMAKE_SOURCE_DIR}/../../swig-modules
 )
 SET(SWIG_PYTHON_LIBRARIES
-    swigtest
+    swigtest-cpp
 )
 
 # Generate C# docstrings
@@ -50,9 +50,9 @@ ADD_DEPENDENCIES(${SWIG_MODULE_swigtest_python_REAL_NAME} swigtest_python_docs_i
 IF(SWIG_WRAP_BOOST_EXCEPTIONS)
     SET(SWIGWRAP 1)
 ENDIF(SWIG_WRAP_BOOST_EXCEPTIONS)
-SET(TEST_CMD "${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/python_swigtest.py")
+SET(TEST_CMD "${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/python_swigtest_cpp.py")
 CONFIGURE_FILE(
     ${CMAKE_SOURCE_DIR}/cpp/test.sh.in
     ${CMAKE_CURRENT_BINARY_DIR}/python-test.sh
 )
-ADD_TEST(python_test ${CMAKE_CURRENT_BINARY_DIR}/python-test.sh)
+ADD_TEST(python_cpp_test ${CMAKE_CURRENT_BINARY_DIR}/python-test.sh)

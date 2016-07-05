@@ -5,7 +5,7 @@
  * or copy at http://opensource.org/licenses/MIT)
  */
 
-public class CSharpSWIGTest {
+public class CSharpSWIGTestCpp {
     public static bool BoostExceptionTest() {
         System.Console.Write("Starting BoostExceptionTest...");
         string swigWrapBoostExceptions = System.Environment.GetEnvironmentVariable("SWIG_WRAP_BOOST_EXCEPTIONS");

@@ -7,7 +7,7 @@
 
 import SWIGTestJava.*;
 
-public class JavaSWIGTest {
+public class JavaSWIGTestCpp {
     public static boolean EnvironmentTest() {
         System.out.print("Starting EnvironmentTest...");
 

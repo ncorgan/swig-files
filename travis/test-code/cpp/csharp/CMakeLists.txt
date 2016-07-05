@@ -21,7 +21,7 @@ SET(SWIG_CSHARP_INCLUDE_DIRS
     ${CMAKE_SOURCE_DIR}/../../swig-modules
 )
 SET(SWIG_CSHARP_LIBRARIES
-    swigtest
+    swigtest-cpp
 )
 
 # Generate C# docstrings
@@ -52,19 +52,19 @@ CSHARP_BUILD_DLL(swigtest-csharp "swigtest_csharp")
 
 # Build test
 SET(CSHARP_SOURCE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
-CSHARP_BUILD_EXE(CSharpSWIGTest swigtest-csharp)
+CSHARP_BUILD_EXE(CSharpSWIGTestCpp swigtest-csharp)
 
 # Add unit test
 IF(SWIG_WRAP_BOOST_EXCEPTIONS)
     SET(SWIGWRAP 1)
 ENDIF(SWIG_WRAP_BOOST_EXCEPTIONS)
 IF(WIN32)
-    SET(TEST_CMD "${CMAKE_CURRENT_BINARY_DIR}/CSharpSWIGTest.exe")
+    SET(TEST_CMD "${CMAKE_CURRENT_BINARY_DIR}/CSharpSWIGTestCpp.exe")
 ELSE()
-    SET(TEST_CMD "${CSHARP_INTERPRETER} ${CMAKE_CURRENT_BINARY_DIR}/CSharpSWIGTest.exe")
+    SET(TEST_CMD "${CSHARP_INTERPRETER} ${CMAKE_CURRENT_BINARY_DIR}/CSharpSWIGTestCpp.exe")
 ENDIF(WIN32)
 CONFIGURE_FILE(
     ${CMAKE_SOURCE_DIR}/cpp/test.sh.in
     ${CMAKE_CURRENT_BINARY_DIR}/csharp-test.sh
 )
-ADD_TEST(csharp_test ${CMAKE_CURRENT_BINARY_DIR}/csharp-test.sh)
+ADD_TEST(csharp_cpp_test ${CMAKE_CURRENT_BINARY_DIR}/csharp-test.sh)

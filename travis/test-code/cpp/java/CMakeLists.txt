@@ -20,7 +20,7 @@ SET(SWIG_JAVA_INCLUDE_DIRS
     ${CMAKE_SOURCE_DIR}/../../swig-modules
 )
 SET(SWIG_JAVA_LIBRARIES
-    swigtest
+    swigtest-cpp
 )
 
 # Generate C# docstrings
@@ -49,15 +49,15 @@ ADD_DEPENDENCIES(${SWIG_MODULE_swigtest_java_REAL_NAME} swigtest_java_docs_i)
 JAVA_BUILD_JAR(SWIGTest.jar "swigtest_java" SWIGTestJava "")
 
 # Build test
-JAVA_BUILD_PROGRAM(JavaSWIGTest SWIGTest.jar)
+JAVA_BUILD_PROGRAM(JavaSWIGTestCpp SWIGTest.jar)
 
 # Add unit test
 IF(SWIG_WRAP_BOOST_EXCEPTIONS)
     SET(SWIGWRAP 1)
 ENDIF(SWIG_WRAP_BOOST_EXCEPTIONS)
-SET(TEST_CMD "${Java_JAVA_EXECUTABLE} JavaSWIGTest")
+SET(TEST_CMD "${Java_JAVA_EXECUTABLE} JavaSWIGTestCpp")
 CONFIGURE_FILE(
     ${CMAKE_SOURCE_DIR}/cpp/test.sh.in
     ${CMAKE_CURRENT_BINARY_DIR}/java-test.sh
 )
-ADD_TEST(java_test ${CMAKE_CURRENT_BINARY_DIR}/java-test.sh)
+ADD_TEST(java_cpp_test ${CMAKE_CURRENT_BINARY_DIR}/java-test.sh)
