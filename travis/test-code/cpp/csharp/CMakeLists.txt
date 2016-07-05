@@ -40,19 +40,19 @@ ADD_CUSTOM_COMMAND(
     COMMENT "Generating swigtest_csharp_docs.i"
 )
 ADD_CUSTOM_TARGET(
-    swigtest_csharp_docs_i ALL
+    csharp_swigtest_cpp_docs ALL
     DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/swigtest_csharp_docs.i
 )
 
 # Build SWIG module and C# DLL
 SWIG_CSHARP_INIT()
-SWIG_BUILD_CSHARP_MODULE(swigtest_csharp SWIGTestCSharp TRUE)
-ADD_DEPENDENCIES(${SWIG_MODULE_swigtest_csharp_REAL_NAME} swigtest_csharp_docs_i)
-CSHARP_BUILD_DLL(swigtest-csharp "swigtest_csharp")
+SWIG_BUILD_CSHARP_MODULE(csharp_swigtest_cpp CppSWIGTestCSharp TRUE)
+ADD_DEPENDENCIES(${SWIG_MODULE_csharp_swigtest_cpp_REAL_NAME} csharp_swigtest_cpp_docs)
+CSHARP_BUILD_DLL(csharp-swigtest-cpp "csharp_swigtest_cpp")
 
 # Build test
 SET(CSHARP_SOURCE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
-CSHARP_BUILD_EXE(CSharpSWIGTestCpp swigtest-csharp)
+CSHARP_BUILD_EXE(CSharpSWIGTestCpp csharp-swigtest-cpp)
 
 # Add unit test
 IF(SWIG_WRAP_BOOST_EXCEPTIONS)

@@ -11,14 +11,14 @@ public class JavaSWIGTestCpp {
     public static boolean EnvironmentTest() {
         System.out.print("Starting EnvironmentTest...");
 
-        String value = swigtest_java.getEnv("ABCDEFG");
+        String value = java_swigtest_cpp.getEnv("ABCDEFG");
         if(!value.equals("")) {
             System.out.println("failed.\n");
             return false;
         }
 
-        swigtest_java.setEnv("ABCDEFG", "HIJKLMN");
-        value = swigtest_java.getEnv("ABCDEFG");
+        java_swigtest_cpp.setEnv("ABCDEFG", "HIJKLMN");
+        value = java_swigtest_cpp.getEnv("ABCDEFG");
         if(!value.equals("HIJKLMN")) {
             System.out.println("failed.\n");
             return false;
@@ -30,9 +30,9 @@ public class JavaSWIGTestCpp {
 
     public static boolean BoostExceptionTest() {
         System.out.print("Starting BoostExceptionTest...");
-        if(swigtest_java.getEnv("SWIG_WRAP_BOOST_EXCEPTIONS").equals("")) {
+        if(java_swigtest_cpp.getEnv("SWIG_WRAP_BOOST_EXCEPTIONS").equals("")) {
             try {
-                swigtest_java.throw_boost_exception();
+                java_swigtest_cpp.throw_boost_exception();
             } catch(Exception e) {
                 System.out.println("failed (Boost exceptions not wrapped in this build.");
                 System.out.println("Message: " + e.getMessage() + "\n");
@@ -40,7 +40,7 @@ public class JavaSWIGTestCpp {
             }
         } else {
             try {
-                swigtest_java.throw_boost_exception();
+                java_swigtest_cpp.throw_boost_exception();
                 System.out.println("failed (no exception thrown).\n");
                 return false;
             } catch(RuntimeException e) {
@@ -63,7 +63,7 @@ public class JavaSWIGTestCpp {
         System.out.print("Starting BadExceptionTest...");
 
         try {
-            swigtest_java.throw_bad_exception();
+            java_swigtest_cpp.throw_bad_exception();
         } catch(RuntimeException e) {
             if(!e.getMessage().equals("std::bad_exception")) {
                 System.out.println("failed (e.getMessage() = \"" + e.getMessage() + "\" instead of \"std::bad_exception\").\n");
@@ -83,7 +83,7 @@ public class JavaSWIGTestCpp {
         System.out.print("Starting InvalidArgumentTest...");
 
         try {
-            swigtest_java.throw_invalid_argument();
+            java_swigtest_cpp.throw_invalid_argument();
         } catch(IllegalArgumentException e) {
             if(!e.getMessage().equals("std::invalid_argument")) {
                 System.out.println("failed (e.getMessage() = \"" + e.getMessage() + "\" instead of \"std::invalid_argument\").\n");
@@ -103,7 +103,7 @@ public class JavaSWIGTestCpp {
         System.out.print("Starting DomainErrorTest...");
 
         try {
-            swigtest_java.throw_domain_error();
+            java_swigtest_cpp.throw_domain_error();
         } catch(RuntimeException e) {
             if(!e.getMessage().equals("std::domain_error")) {
                 System.out.println("failed (e.getMessage() = \"" + e.getMessage() + "\" instead of \"std::domain_error\").\n");
@@ -123,7 +123,7 @@ public class JavaSWIGTestCpp {
         System.out.print("Starting LengthErrorTest...");
 
         try {
-            swigtest_java.throw_length_error();
+            java_swigtest_cpp.throw_length_error();
         } catch(IndexOutOfBoundsException e) {
             if(!e.getMessage().equals("std::length_error")) {
                 System.out.println("failed (e.getMessage() = \"" + e.getMessage() + "\" instead of \"std::length_error\").\n");
@@ -143,7 +143,7 @@ public class JavaSWIGTestCpp {
         System.out.print("Starting OutOfRangeTest...");
 
         try {
-            swigtest_java.throw_out_of_range();
+            java_swigtest_cpp.throw_out_of_range();
         } catch(IndexOutOfBoundsException e) {
             if(!e.getMessage().equals("std::out_of_range")) {
                 System.out.println("failed (e.getMessage() = \"" + e.getMessage() + "\" instead of \"std::out_of_range\").\n");
@@ -163,7 +163,7 @@ public class JavaSWIGTestCpp {
         System.out.print("Starting LogicErrorTest...");
 
         try {
-            swigtest_java.throw_logic_error();
+            java_swigtest_cpp.throw_logic_error();
         } catch(RuntimeException e) {
             if(!e.getMessage().equals("std::logic_error")) {
                 System.out.println("failed (e.getMessage() = \"" + e.getMessage() + "\" instead of \"std::logic_error\").\n");
@@ -183,7 +183,7 @@ public class JavaSWIGTestCpp {
         System.out.print("Starting RangeErrorTest...");
 
         try {
-            swigtest_java.throw_range_error();
+            java_swigtest_cpp.throw_range_error();
         } catch(RuntimeException e) {
             if(!e.getMessage().equals("std::range_error")) {
                 System.out.println("failed (e.getMessage() = \"" + e.getMessage() + "\" instead of \"std::range_error\").\n");
@@ -203,7 +203,7 @@ public class JavaSWIGTestCpp {
         System.out.print("Starting OverflowErrorTest...");
 
         try {
-            swigtest_java.throw_overflow_error();
+            java_swigtest_cpp.throw_overflow_error();
         } catch(IndexOutOfBoundsException e) {
             if(!e.getMessage().equals("std::overflow_error")) {
                 System.out.println("failed (e.getMessage() = \"" + e.getMessage() + "\" instead of \"std::overflow_error\").\n");
@@ -223,7 +223,7 @@ public class JavaSWIGTestCpp {
         System.out.print("Starting UnderflowErrorTest...");
 
         try {
-            swigtest_java.throw_underflow_error();
+            java_swigtest_cpp.throw_underflow_error();
         } catch(RuntimeException e) {
             if(!e.getMessage().equals("std::underflow_error")) {
                 System.out.println("failed (e.getMessage() = \"" + e.getMessage() + "\" instead of \"std::underflow_error\").\n");
@@ -243,7 +243,7 @@ public class JavaSWIGTestCpp {
         System.out.print("Starting RuntimeErrorTest...");
 
         try {
-            swigtest_java.throw_runtime_error();
+            java_swigtest_cpp.throw_runtime_error();
         } catch(RuntimeException e) {
             if(!e.getMessage().equals("std::runtime_error")) {
                 System.out.println("failed (e.getMessage() = \"" + e.getMessage() + "\" instead of \"std::runtime_error\").\n");
@@ -267,7 +267,7 @@ public class JavaSWIGTestCpp {
         System.out.print("Starting IOErrorTest...");
 
         try {
-            swigtest_java.throw_io_error();
+            java_swigtest_cpp.throw_io_error();
         } catch(Exception e) {
             if(!e.getMessage().equals("io_error")) {
                 System.out.println("failed (e.getMessage() = \"" + e.getMessage() + "\" instead of \"io_error\").\n");
@@ -288,7 +288,7 @@ public class JavaSWIGTestCpp {
         System.out.print("Starting ValueErrorTest...");
 
         try {
-            swigtest_java.throw_value_error();
+            java_swigtest_cpp.throw_value_error();
         } catch(RuntimeException e) {
             if(!e.getMessage().equals("value_error")) {
                 System.out.println("failed (e.getMessage() = \"" + e.getMessage() + "\" instead of \"value_error\").\n");
@@ -308,7 +308,7 @@ public class JavaSWIGTestCpp {
         System.out.print("Starting StdExceptionTest...");
 
         try {
-            swigtest_java.throw_std_exception();
+            java_swigtest_cpp.throw_std_exception();
         } catch(RuntimeException e) {
             if(!e.getMessage().equals("std::exception")) {
                 System.out.println("failed (e.getMessage() = \"" + e.getMessage() + "\" instead of \"std::exception\").\n");
@@ -328,7 +328,7 @@ public class JavaSWIGTestCpp {
         System.out.print("Starting UnknownErrorTest...");
 
         try {
-            swigtest_java.throw_unknown();
+            java_swigtest_cpp.throw_unknown();
         } catch(java.lang.UnknownError e) {
             if(!e.getMessage().equals("Unknown error")) {
                 System.out.println("failed (e.getMessage() = \"" + e.getMessage() + "\" instead of \"Unknown error\").\n");

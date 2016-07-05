@@ -28,7 +28,7 @@ CONFIGURE_FILE(
     ${CMAKE_CURRENT_SOURCE_DIR}/../generate_swig_docstrings.py.in
     ${CMAKE_CURRENT_BINARY_DIR}/generate_python_docstrings.py
 @ONLY)
-FILE(GLOB_RECURSE header_files ${CMAKE_SOURCE_DIR} "*.h*")
+FILE(GLOB_RECURSE header_files ${CMAKE_CURRENT_SOURCE_DIR}/.. "*.h*")
 ADD_CUSTOM_COMMAND(
     DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/../generate_swig_docstrings.py.in
     DEPENDS ${header_files}
@@ -38,19 +38,19 @@ ADD_CUSTOM_COMMAND(
     COMMENT "Generating swigtest_python_docs.i"
 )
 ADD_CUSTOM_TARGET(
-    swigtest_python_docs_i ALL
+    python_swigtest_cpp_docs ALL
     DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/swigtest_python_docs.i
 )
 
 # Build SWIG module
-SWIG_BUILD_PYTHON_MODULE(swigtest_python swigtest TRUE)
-ADD_DEPENDENCIES(${SWIG_MODULE_swigtest_python_REAL_NAME} swigtest_python_docs_i)
+SWIG_BUILD_PYTHON_MODULE(python_swigtest_cpp swigtest_cpp TRUE)
+ADD_DEPENDENCIES(${SWIG_MODULE_python_swigtest_cpp_REAL_NAME} python_swigtest_cpp_docs)
 
 # Add unit test
 IF(SWIG_WRAP_BOOST_EXCEPTIONS)
     SET(SWIGWRAP 1)
 ENDIF(SWIG_WRAP_BOOST_EXCEPTIONS)
-SET(TEST_CMD "${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/python_swigtest_cpp.py")
+SET(TEST_CMD "${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/python_swigtest_cpp_test.py")
 CONFIGURE_FILE(
     ${CMAKE_SOURCE_DIR}/cpp/test.sh.in
     ${CMAKE_CURRENT_BINARY_DIR}/python-test.sh

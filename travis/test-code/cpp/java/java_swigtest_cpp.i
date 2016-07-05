@@ -7,7 +7,7 @@
 
 // Initialization
 %include <java/java_init.i>
-JAVA_INIT("swigtest_java")
+JAVA_INIT("java_swigtest_cpp")
 
 %{
     #include "test_fcns.hpp"

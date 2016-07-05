@@ -11,7 +11,7 @@ public class CSharpSWIGTestCpp {
         string swigWrapBoostExceptions = System.Environment.GetEnvironmentVariable("SWIG_WRAP_BOOST_EXCEPTIONS");
         if(swigWrapBoostExceptions == null || swigWrapBoostExceptions.Equals("")) {
             try {
-                SWIGTestCSharp.throw_boost_exception();
+                CppSWIGTestCSharp.throw_boost_exception();
             } catch(System.Exception e) {
                 System.Console.WriteLine("failed (Boost exceptions not wrapped in this build).");
                 System.Console.WriteLine("Message: " + e.Message + "\n");
@@ -19,7 +19,7 @@ public class CSharpSWIGTestCpp {
             }
         } else {
             try {
-                SWIGTestCSharp.throw_boost_exception();
+                CppSWIGTestCSharp.throw_boost_exception();
                 System.Console.WriteLine("failed (no exception thrown).\n");
                 return false;
             } catch(System.ApplicationException e) {
@@ -41,7 +41,7 @@ public class CSharpSWIGTestCpp {
     public static bool BadExceptionTest() {
         System.Console.Write("Starting BadExceptionTest...");
         try {
-            SWIGTestCSharp.throw_bad_exception();
+            CppSWIGTestCSharp.throw_bad_exception();
             System.Console.WriteLine("failed (no exception thrown).\n");
             return false;
         } catch(System.ApplicationException e) {
@@ -62,7 +62,7 @@ public class CSharpSWIGTestCpp {
     public static bool InvalidArgumentTest() {
         System.Console.Write("Starting InvalidArgumentTest...");
         try {
-            SWIGTestCSharp.throw_invalid_argument();
+            CppSWIGTestCSharp.throw_invalid_argument();
             System.Console.WriteLine("failed (no exception thrown).\n");
             return false;
         } catch(System.ArgumentException e) {
@@ -83,7 +83,7 @@ public class CSharpSWIGTestCpp {
     public static bool DomainErrorTest() {
         System.Console.Write("Starting DomainErrorTest...");
         try {
-            SWIGTestCSharp.throw_domain_error();
+            CppSWIGTestCSharp.throw_domain_error();
             System.Console.WriteLine("failed (no exception thrown).\n");
             return false;
         } catch(System.ArgumentOutOfRangeException e) {
@@ -104,7 +104,7 @@ public class CSharpSWIGTestCpp {
     public static bool LengthErrorTest() {
         System.Console.Write("Starting LengthErrorTest...");
         try {
-            SWIGTestCSharp.throw_length_error();
+            CppSWIGTestCSharp.throw_length_error();
             System.Console.WriteLine("failed (no exception thrown).\n");
             return false;
         } catch(System.IndexOutOfRangeException e) {
@@ -125,7 +125,7 @@ public class CSharpSWIGTestCpp {
     public static bool OutOfRangeTest() {
         System.Console.Write("Starting OutOfRangeTest...");
         try {
-            SWIGTestCSharp.throw_out_of_range();
+            CppSWIGTestCSharp.throw_out_of_range();
             System.Console.WriteLine("failed (no exception thrown).\n");
             return false;
         } catch(System.IndexOutOfRangeException e) {
@@ -146,7 +146,7 @@ public class CSharpSWIGTestCpp {
     public static bool LogicErrorTest() {
         System.Console.Write("Starting LogicErrorTest...");
         try {
-            SWIGTestCSharp.throw_logic_error();
+            CppSWIGTestCSharp.throw_logic_error();
             System.Console.WriteLine("failed (no exception thrown).\n");
             return false;
         } catch(System.ApplicationException e) {
@@ -167,7 +167,7 @@ public class CSharpSWIGTestCpp {
     public static bool RangeErrorTest() {
         System.Console.Write("Starting RangeErrorTest...");
         try {
-            SWIGTestCSharp.throw_range_error();
+            CppSWIGTestCSharp.throw_range_error();
             System.Console.WriteLine("failed (no exception thrown).\n");
             return false;
         } catch(System.ApplicationException e) {
@@ -188,7 +188,7 @@ public class CSharpSWIGTestCpp {
     public static bool OverflowErrorTest() {
         System.Console.Write("Starting OverflowErrorTest...");
         try {
-            SWIGTestCSharp.throw_overflow_error();
+            CppSWIGTestCSharp.throw_overflow_error();
             System.Console.WriteLine("failed (no exception thrown).\n");
             return false;
         } catch(System.OverflowException e) {
@@ -209,7 +209,7 @@ public class CSharpSWIGTestCpp {
     public static bool UnderflowErrorTest() {
         System.Console.Write("Starting UnderflowErrorTest...");
         try {
-            SWIGTestCSharp.throw_underflow_error();
+            CppSWIGTestCSharp.throw_underflow_error();
             System.Console.WriteLine("failed (no exception thrown).\n");
             return false;
         } catch(System.ApplicationException e) {
@@ -230,7 +230,7 @@ public class CSharpSWIGTestCpp {
     public static bool RuntimeErrorTest() {
         System.Console.Write("Starting RuntimeErrorTest...");
         try {
-            SWIGTestCSharp.throw_runtime_error();
+            CppSWIGTestCSharp.throw_runtime_error();
             System.Console.WriteLine("failed (no exception thrown).\n");
             return false;
         } catch(System.ApplicationException e) {
@@ -251,7 +251,7 @@ public class CSharpSWIGTestCpp {
     public static bool IOErrorTest() {
         System.Console.Write("Starting IOErrorTest...");
         try {
-            SWIGTestCSharp.throw_io_error();
+            CppSWIGTestCSharp.throw_io_error();
             System.Console.WriteLine("failed (no exception thrown).\n");
             return false;
         } catch(System.IO.IOException e) {
@@ -272,7 +272,7 @@ public class CSharpSWIGTestCpp {
     public static bool ValueErrorTest() {
         System.Console.Write("Starting ValueErrorTest...");
         try {
-            SWIGTestCSharp.throw_value_error();
+            CppSWIGTestCSharp.throw_value_error();
             System.Console.WriteLine("failed (no exception thrown).\n");
             return false;
         } catch(System.ArgumentOutOfRangeException e) {
@@ -293,7 +293,7 @@ public class CSharpSWIGTestCpp {
     public static bool StdExceptionTest() {
         System.Console.Write("Starting StdExceptionTest...");
         try {
-            SWIGTestCSharp.throw_std_exception();
+            CppSWIGTestCSharp.throw_std_exception();
             System.Console.WriteLine("failed (no exception thrown).\n");
             return false;
         } catch(System.ApplicationException e) {
@@ -314,7 +314,7 @@ public class CSharpSWIGTestCpp {
     public static bool UnknownErrorTest() {
         System.Console.Write("Starting UnknownErrorTest...");
         try {
-            SWIGTestCSharp.throw_unknown();
+            CppSWIGTestCSharp.throw_unknown();
             System.Console.WriteLine("failed (no exception thrown).\n");
             return false;
         } catch(System.ApplicationException e) {

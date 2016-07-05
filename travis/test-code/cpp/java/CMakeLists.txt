@@ -39,17 +39,17 @@ ADD_CUSTOM_COMMAND(
     COMMENT "Generating swigtest_java_docs.i"
 )
 ADD_CUSTOM_TARGET(
-    swigtest_java_docs_i ALL
+    java_swigtest_cpp_docs ALL
     DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/swigtest_java_docs.i
 )
 
 # Build SWIG module and Java JAR
-SWIG_BUILD_JAVA_MODULE(swigtest_java SWIGTestJava TRUE)
-ADD_DEPENDENCIES(${SWIG_MODULE_swigtest_java_REAL_NAME} swigtest_java_docs_i)
-JAVA_BUILD_JAR(SWIGTest.jar "swigtest_java" SWIGTestJava "")
+SWIG_BUILD_JAVA_MODULE(java_swigtest_cpp SWIGTestJava TRUE)
+ADD_DEPENDENCIES(${SWIG_MODULE_java_swigtest_cpp_REAL_NAME} java_swigtest_cpp_docs)
+JAVA_BUILD_JAR(SWIGTestCpp.jar "java_swigtest_cpp" SWIGTestJava "")
 
 # Build test
-JAVA_BUILD_PROGRAM(JavaSWIGTestCpp SWIGTest.jar)
+JAVA_BUILD_PROGRAM(JavaSWIGTestCpp SWIGTestCpp.jar)
 
 # Add unit test
 IF(SWIG_WRAP_BOOST_EXCEPTIONS)

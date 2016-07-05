@@ -6,7 +6,7 @@
 # or copy at http://opensource.org/licenses/MIT)
 #
 
-import swigtest_python
+import python_swigtest_cpp
 
 import os
 import sys
@@ -20,14 +20,14 @@ def boost_exception_test():
     if swig_wrap_boost_exceptions is None or swig_wrap_boost_exceptions == "":
         # There should be no exception
         try:
-            swigtest_python.throw_boost_exception()
+            python_swigtest_cpp.throw_boost_exception()
         except:
             print("failed (Boost exceptions not wrapped in this build).\n")
             return False
     else:
         # There should be an exception
         try:
-            swigtest_python.throw_boost_exception()
+            python_swigtest_cpp.throw_boost_exception()
         except:
             exc_type, exc_value, exc_traceback = sys.exc_info()
             if "boost::exception" not in str(exc_value):
@@ -38,7 +38,7 @@ def boost_exception_test():
 
 def bad_exception_test():
     try:
-        swigtest_python.throw_bad_exception()
+        python_swigtest_cpp.throw_bad_exception()
     except:
         exc_type, exc_value, exc_traceback = sys.exc_info()
         if "SystemError" not in str(exc_type):
@@ -52,7 +52,7 @@ def bad_exception_test():
 
 def invalid_argument_test():
     try:
-        swigtest_python.throw_invalid_argument()
+        python_swigtest_cpp.throw_invalid_argument()
     except:
         exc_type, exc_value, exc_traceback = sys.exc_info()
         if "ValueError" not in str(exc_type):
@@ -66,7 +66,7 @@ def invalid_argument_test():
 
 def domain_error_test():
     try:
-        swigtest_python.throw_domain_error()
+        python_swigtest_cpp.throw_domain_error()
     except:
         exc_type, exc_value, exc_traceback = sys.exc_info()
         if "ValueError" not in str(exc_type):
@@ -80,7 +80,7 @@ def domain_error_test():
 
 def length_error_test():
     try:
-        swigtest_python.throw_length_error()
+        python_swigtest_cpp.throw_length_error()
     except:
         exc_type, exc_value, exc_traceback = sys.exc_info()
         if "IndexError" not in str(exc_type):
@@ -94,7 +94,7 @@ def length_error_test():
 
 def out_of_range_test():
     try:
-        swigtest_python.throw_out_of_range()
+        python_swigtest_cpp.throw_out_of_range()
     except:
         exc_type, exc_value, exc_traceback = sys.exc_info()
         if "IndexError" not in str(exc_type):
@@ -108,7 +108,7 @@ def out_of_range_test():
 
 def logic_error_test():
     try:
-        swigtest_python.throw_logic_error()
+        python_swigtest_cpp.throw_logic_error()
     except:
         exc_type, exc_value, exc_traceback = sys.exc_info()
         if "SystemError" not in str(exc_type):
@@ -122,7 +122,7 @@ def logic_error_test():
 
 def range_error_test():
     try:
-        swigtest_python.throw_range_error()
+        python_swigtest_cpp.throw_range_error()
     except:
         exc_type, exc_value, exc_traceback = sys.exc_info()
         if "RuntimeError" not in str(exc_type):
@@ -136,7 +136,7 @@ def range_error_test():
 
 def overflow_error_test():
     try:
-        swigtest_python.throw_overflow_error()
+        python_swigtest_cpp.throw_overflow_error()
     except:
         exc_type, exc_value, exc_traceback = sys.exc_info()
         if "OverflowError" not in str(exc_type):
@@ -150,7 +150,7 @@ def overflow_error_test():
 
 def underflow_error_test():
     try:
-        swigtest_python.throw_underflow_error()
+        python_swigtest_cpp.throw_underflow_error()
     except:
         exc_type, exc_value, exc_traceback = sys.exc_info()
         if "RuntimeError" not in str(exc_type):
@@ -164,7 +164,7 @@ def underflow_error_test():
 
 def runtime_error_test():
     try:
-        swigtest_python.throw_runtime_error()
+        python_swigtest_cpp.throw_runtime_error()
     except:
         exc_type, exc_value, exc_traceback = sys.exc_info()
         if "RuntimeError" not in str(exc_type):
@@ -178,7 +178,7 @@ def runtime_error_test():
 
 def io_error_test():
     try:
-        swigtest_python.throw_io_error()
+        python_swigtest_cpp.throw_io_error()
     except:
         errname = "IOError" if PYTHON_MAJOR_VERSION == 2 else "OSError"
         exc_type, exc_value, exc_traceback = sys.exc_info()
@@ -193,7 +193,7 @@ def io_error_test():
 
 def value_error_test():
     try:
-        swigtest_python.throw_value_error()
+        python_swigtest_cpp.throw_value_error()
     except:
         exc_type, exc_value, exc_traceback = sys.exc_info()
         if "ValueError" not in str(exc_type):
@@ -207,7 +207,7 @@ def value_error_test():
 
 def std_exception_test():
     try:
-        swigtest_python.throw_std_exception()
+        python_swigtest_cpp.throw_std_exception()
     except:
         exc_type, exc_value, exc_traceback = sys.exc_info()
         if "SystemError" not in str(exc_type):
@@ -221,7 +221,7 @@ def std_exception_test():
 
 def unknown_error_test():
     try:
-        swigtest_python.throw_unknown()
+        python_swigtest_cpp.throw_unknown()
     except:
         exc_type, exc_value, exc_traceback = sys.exc_info()
         if "RuntimeError" not in str(exc_type):
