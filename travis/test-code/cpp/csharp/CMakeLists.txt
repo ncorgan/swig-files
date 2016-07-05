@@ -27,12 +27,12 @@ SET(SWIG_CSHARP_LIBRARIES
 # Generate C# docstrings
 SET(SWIG_LANGUAGE "csharp")
 CONFIGURE_FILE(
-    ${CMAKE_SOURCE_DIR}/generate_swig_docstrings.py.in
+    ${CMAKE_CURRENT_SOURCE_DIR}/../generate_swig_docstrings.py.in
     ${CMAKE_CURRENT_BINARY_DIR}/generate_csharp_docstrings.py
 @ONLY)
-FILE(GLOB_RECURSE header_files ${CMAKE_SOURCE_DIR} "*.h*")
+FILE(GLOB_RECURSE header_files ${CMAKE_CURRENT_SOURCE_DIR}/.. "*.h*")
 ADD_CUSTOM_COMMAND(
-    DEPENDS ${CMAKE_SOURCE_DIR}/generate_swig_docstrings.py.in
+    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/../generate_swig_docstrings.py.in
     DEPENDS ${header_files}
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/../../python-scripts
     OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/swigtest_csharp_docs.i
@@ -64,7 +64,7 @@ ELSE()
     SET(TEST_CMD "${CSHARP_INTERPRETER} ${CMAKE_CURRENT_BINARY_DIR}/CSharpSWIGTest.exe")
 ENDIF(WIN32)
 CONFIGURE_FILE(
-    ${CMAKE_SOURCE_DIR}/test.sh.in
+    ${CMAKE_SOURCE_DIR}/cpp/test.sh.in
     ${CMAKE_CURRENT_BINARY_DIR}/csharp-test.sh
 )
 ADD_TEST(csharp_test ${CMAKE_CURRENT_BINARY_DIR}/csharp-test.sh)

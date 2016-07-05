@@ -1,0 +1,15 @@
+#!/bin/bash
+#
+# Copyright (c) 2016 Nicholas Corgan (n.corgan@gmail.com)
+#
+# Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
+# or copy at http://opensource.org/licenses/MIT)
+#
+
+export LD_LIBRARY_PATH=@CMAKE_BINARY_DIR@/cpp:@CMAKE_BINARY_DIR@/cpp/csharp:@CMAKE_BINARY_DIR@/cpp/java:@CMAKE_BINARY_DIR@/cpp/python:$LD_LIBRARY_PATH
+export PATH=@CMAKE_BINARY_DIR@/cpp/csharp:$PATH
+export CLASSPATH=@CMAKE_BINARY_DIR@/cpp/java/SWIGTest.jar:$CLASSPATH
+export PYTHONPATH=@CMAKE_SOURCE_DIR@/python-scripts:@CMAKE_BINARY_DIR@/cpp/python:$PYTHONPATH
+export SWIG_WRAP_BOOST_EXCEPTIONS=@SWIGWRAP@
+
+@TEST_CMD@

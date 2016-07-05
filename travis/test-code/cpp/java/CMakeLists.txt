@@ -26,12 +26,12 @@ SET(SWIG_JAVA_LIBRARIES
 # Generate C# docstrings
 SET(SWIG_LANGUAGE "java")
 CONFIGURE_FILE(
-    ${CMAKE_SOURCE_DIR}/generate_swig_docstrings.py.in
+    ${CMAKE_CURRENT_SOURCE_DIR}/../generate_swig_docstrings.py.in
     ${CMAKE_CURRENT_BINARY_DIR}/generate_java_docstrings.py
 @ONLY)
 FILE(GLOB_RECURSE header_files ${CMAKE_SOURCE_DIR} "*.h*")
 ADD_CUSTOM_COMMAND(
-    DEPENDS ${CMAKE_SOURCE_DIR}/generate_swig_docstrings.py.in
+    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/../generate_swig_docstrings.py.in
     DEPENDS ${header_files}
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/../../python-scripts
     OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/swigtest_java_docs.i
@@ -57,7 +57,7 @@ IF(SWIG_WRAP_BOOST_EXCEPTIONS)
 ENDIF(SWIG_WRAP_BOOST_EXCEPTIONS)
 SET(TEST_CMD "${Java_JAVA_EXECUTABLE} JavaSWIGTest")
 CONFIGURE_FILE(
-    ${CMAKE_SOURCE_DIR}/test.sh.in
+    ${CMAKE_SOURCE_DIR}/cpp/test.sh.in
     ${CMAKE_CURRENT_BINARY_DIR}/java-test.sh
 )
 ADD_TEST(java_test ${CMAKE_CURRENT_BINARY_DIR}/java-test.sh)

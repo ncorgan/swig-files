@@ -7,6 +7,7 @@
 #
 
 CMAKE_SOURCE_DIR         = "@CMAKE_SOURCE_DIR@"
+CMAKE_CURRENT_SOURCE_DIR = "@CMAKE_CURRENT_SOURCE_DIR@"
 CMAKE_CURRENT_BINARY_DIR = "@CMAKE_CURRENT_BINARY_DIR@"
 SWIG_LANGUAGE            = "@SWIG_LANGUAGE@"
 
@@ -78,8 +79,8 @@ SWIG_DOC_FUNCTIONS = {
 }
 
 SWIGTEST_HEADERS = [
-    CppHeaderParser.CppHeader("{0}/test_class.hpp".format(CMAKE_SOURCE_DIR)),
-    CppHeaderParser.CppHeader("{0}/test_fcns.hpp".format(CMAKE_SOURCE_DIR)),
+    CppHeaderParser.CppHeader("{0}/../test_class.hpp".format(CMAKE_CURRENT_SOURCE_DIR)),
+    CppHeaderParser.CppHeader("{0}/../test_fcns.hpp".format(CMAKE_CURRENT_SOURCE_DIR)),
 ]
 
 if __name__ == "__main__":
