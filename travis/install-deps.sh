@@ -11,3 +11,11 @@ sudo apt-get -y install build-essential git cmake swig gcc g++ \
                         libboost-dev doxygen mono-complete default-jre \
                         libpython-dev python-ply python-pip
 sudo pip install CppHeaderParser
+
+# Test imports
+python -c "import ply"
+[ $? -ne 0 ] && exit 1
+python -c "import ply.lex"
+[ $? -ne 0 ] && exit 1
+export PYTHONPATH=/usr/local/lib/python2.7/dist-packages:$PYTHONPATH
+python -c "import CppHeaderParser"
