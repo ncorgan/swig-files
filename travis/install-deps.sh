@@ -13,9 +13,9 @@ sudo apt-get -y install build-essential git cmake swig gcc g++ \
 sudo pip install CppHeaderParser
 
 # Test imports
+export PYTHONPATH=/usr/lib/python2.7/dist-packages:/usr/lib/python2.7/site-packages:/usr/local/lib/python2.7/dist-packages:/usr/local/lib/python2.7/site-packages
 python -c "import ply"
 [ $? -ne 0 ] && exit 1
 python -c "import ply.lex"
 [ $? -ne 0 ] && exit 1
-export PYTHONPATH=/usr/local/lib/python2.7/dist-packages:$PYTHONPATH
 python -c "import CppHeaderParser"
