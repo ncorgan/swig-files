@@ -7,6 +7,8 @@
 #
 
 export TOPLEVEL_DIR=$PWD/travis/test-code
+export PYTHONPATH=/usr/local/lib/python2.7/dist-packages:$PYTHONPATH
+
 mkdir $TOPLEVEL_DIR/build $TOPLEVEL_DIR/build-with-boost
 
 cd $TOPLEVEL_DIR/build
