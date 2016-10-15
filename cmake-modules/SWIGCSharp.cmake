@@ -64,6 +64,7 @@ MACRO(SWIG_CSHARP_INIT)
 ENDMACRO(SWIG_CSHARP_INIT)
 
 MACRO(SWIG_BUILD_CSHARP_MODULE swig_module_name csharp_module_name cplusplus)
+    INCLUDE(UseCSharp)
     INCLUDE(UseSWIG)
 
     SET(SWIG_INCLUDE_DIRS
