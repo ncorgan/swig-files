@@ -17,4 +17,7 @@ projects easier.
  * SWIGJava.cmake: macros for building Java SWIG modules
  * SWIGPython.cmake: macros for building Python SWIG modules
 
-README last updated: 2016/07/03
+**Python modules:**
+ * swigdoc_converter: incorporate Doxygen documentation into SWIG wrappers
+
+README last updated: 2016/10/15
